@@ -88,15 +88,15 @@ export function VideoPlayer() {
           {/* Search */}
           <div className="relative" data-magicpath-id="4" data-magicpath-path="VideoPlayer.tsx">
             <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" data-magicpath-id="5" data-magicpath-path="VideoPlayer.tsx" />
-            <input type="text" placeholder="Search videos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64" data-magicpath-id="6" data-magicpath-path="VideoPlayer.tsx" />
+            <input type="text" placeholder="Search videos..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#06b6d4] focus:border-transparent w-64" data-magicpath-id="6" data-magicpath-path="VideoPlayer.tsx" />
           </div>
         </div>
 
         {/* Filter Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-2" data-magicpath-id="7" data-magicpath-path="VideoPlayer.tsx">
-          {filterOptions.map(filter => <button key={filter.id} onClick={() => setActiveFilter(filter.id as any)} className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilter === filter.id ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-50'}`} data-magicpath-id="8" data-magicpath-path="VideoPlayer.tsx">
+          {filterOptions.map(filter => <button key={filter.id} onClick={() => setActiveFilter(filter.id as any)} className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilter === filter.id ? 'bg-gradient-to-r from-[#06b6d4] to-[#0891b2] text-white' : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-50'}`} data-magicpath-id="8" data-magicpath-path="VideoPlayer.tsx">
               <span data-magicpath-id="9" data-magicpath-path="VideoPlayer.tsx">{filter.label}</span>
-              <span className={`px-2 py-0.5 rounded-full text-xs ${activeFilter === filter.id ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-600'}`} data-magicpath-id="10" data-magicpath-path="VideoPlayer.tsx">
+              <span className={`px-2 py-0.5 rounded-full text-xs ${activeFilter === filter.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`} data-magicpath-id="10" data-magicpath-path="VideoPlayer.tsx">
                 {filter.count}
               </span>
             </button>)}
@@ -171,7 +171,7 @@ export function VideoPlayer() {
             scale: 1.02
           }} whileTap={{
             scale: 0.98
-          }} className={`w-full text-left p-4 rounded-xl border transition-all ${selectedVideo?.id === video.id ? 'border-blue-500 bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'}`} data-magicpath-id="40" data-magicpath-path="VideoPlayer.tsx">
+          }} className={`w-full text-left p-4 rounded-xl border transition-all ${selectedVideo?.id === video.id ? 'border-[#06b6d4] bg-[#06b6d4]/5' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'}`} data-magicpath-id="40" data-magicpath-path="VideoPlayer.tsx">
                 <div className="flex gap-3" data-magicpath-id="41" data-magicpath-path="VideoPlayer.tsx">
                   {/* Thumbnail */}
                   <div className="w-20 h-12 bg-slate-200 rounded-lg flex items-center justify-center flex-shrink-0" data-magicpath-id="42" data-magicpath-path="VideoPlayer.tsx">

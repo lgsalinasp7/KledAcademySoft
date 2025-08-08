@@ -144,7 +144,7 @@ export function DashboardLayout({
             {/* User Profile Dropdown */}
             <div className="relative" data-magicpath-id="11" data-magicpath-path="DashboardLayout.tsx">
               <button onClick={() => setShowUserDropdown(!showUserDropdown)} className="flex items-center gap-3 bg-slate-100 hover:bg-slate-200 rounded-xl px-4 py-2 transition-colors" data-magicpath-id="12" data-magicpath-path="DashboardLayout.tsx">
-                <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm font-semibold text-slate-900" data-magicpath-id="13" data-magicpath-path="DashboardLayout.tsx">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#06b6d4] to-[#0891b2] rounded-full flex items-center justify-center text-sm font-semibold text-white" data-magicpath-id="13" data-magicpath-path="DashboardLayout.tsx">
                   {user.initials}
                 </div>
                 <span className="text-sm font-medium text-slate-900 hidden sm:block" data-magicpath-id="14" data-magicpath-path="DashboardLayout.tsx">{user.name}</span>
@@ -210,7 +210,7 @@ export function DashboardLayout({
                 }} transition={{
                   duration: 1,
                   ease: "easeOut"
-                }} className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full" data-magicpath-id="38" data-magicpath-path="DashboardLayout.tsx" />
+                }} className="bg-gradient-to-r from-[#06b6d4] to-[#0891b2] h-3 rounded-full" data-magicpath-id="38" data-magicpath-path="DashboardLayout.tsx" />
                   </div>
                 </div>
               </div>
