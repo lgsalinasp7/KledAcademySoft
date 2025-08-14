@@ -24,7 +24,7 @@ export function KaledAcademyApp() {
     setUser(null);
   };
   if (!isLoggedIn) {
-    return <LoginPage onLogin={handleLogin} data-magicpath-id="0" data-magicpath-path="KaledAcademyApp.tsx" />;
+    return <LoginPage onLogin={handleLogin} />;
   }
-  return <DashboardLayout user={user!} onLogout={handleLogout} data-magicpath-id="1" data-magicpath-path="KaledAcademyApp.tsx" />;
+  return <DashboardLayout user={user!} onLogout={handleLogout} />;
 }
