@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Menu, Maximize, Minimize } from 'lucide-react';
 import { introductionItems, contentItems, feedbackItems } from '../../../data/lessons';
 import { AppHeader } from '../../layout/AppHeader';
@@ -6,6 +6,7 @@ import { LessonSidebar } from './LessonSidebar';
 import { LessonContent } from './LessonContent';
 import { LessonNavigation } from './LessonNavigation';
 import { User } from '../../../types';
+import { useProgress } from '../../../hooks/useProgress';
 
 interface LessonContentViewProps {
   lessonCode: string;
@@ -21,6 +22,11 @@ export function LessonContentView({ lessonCode, lessonTitle, onBack, user, onLog
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
 
+  const { updateLessonProgress } = useProgress(
+    user?.id || '5', // Default to Laura's ID for demo
+    '1' // Course ID for Full Stack
+  );
+
   const getCurrentLessonIndex = () => {
     switch (activeSection) {
       case 'about-module': return 0;
@@ -32,6 +38,12 @@ export function LessonContentView({ lessonCode, lessonTitle, onBack, user, onLog
   
   const currentLessonIndex = getCurrentLessonIndex();
   const currentLessonNumber = currentLessonIndex + 1;
+
+  // Mark lesson as completed when user views it
+  useEffect(() => {
+    const lessonId = `FSM0L${currentLessonNumber}`;
+    updateLessonProgress('1', lessonId, true); // Module ID '1' for Module 0
+  }, [activeSection, currentLessonNumber, updateLessonProgress]);
 
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);

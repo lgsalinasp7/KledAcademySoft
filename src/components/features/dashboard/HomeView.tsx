@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Calendar, Github, ExternalLink } from 'lucide-react';
 import { User } from '../../../types';
+import { useProgress } from '../../../hooks/useProgress';
+import { ProgressBar } from '../../ui/ProgressBar';
 
 interface HomeViewProps {
   user: User;
@@ -10,6 +12,10 @@ interface HomeViewProps {
 }
 
 export function HomeView({ user, onNavigateToCareer }: HomeViewProps) {
+  const { overallProgress } = useProgress(
+    user?.id || '5', // Default to Laura's ID for demo
+    '1' // Course ID for Full Stack
+  );
 
   return (
     <div className="flex flex-1 h-full">
@@ -49,12 +55,15 @@ export function HomeView({ user, onNavigateToCareer }: HomeViewProps) {
                 <div>
                   <p className="text-sm text-blue-400 font-medium mb-1">Carrera</p>
                   <h3 className="text-xl font-bold text-white mb-2">Full Stack 3.0</h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <span>Completado: 9.4%</span>
+                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                    <span>Completado: {overallProgress.toFixed(1)}%</span>
                   </div>
-                  <div className="w-96 bg-gray-700 rounded-full h-2 mt-2">
-                    <div className="bg-yellow-400 h-2 rounded-full" style={{ width: '9.4%' }}></div>
-                  </div>
+                  <ProgressBar 
+                    percentage={overallProgress}
+                    color="yellow"
+                    height="sm"
+                    showLabel={false}
+                  />
                 </div>
               </div>
               <ChevronRight size={24} className="text-gray-400" />

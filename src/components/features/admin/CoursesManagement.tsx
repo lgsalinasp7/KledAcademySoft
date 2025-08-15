@@ -11,69 +11,53 @@ import {
   Clock,
   DollarSign,
   Star,
-  MoreVertical
+  MoreVertical,
+  X,
+  Save,
+  AlertCircle
 } from 'lucide-react';
 import { User, Course } from '../../../types';
 import { Button } from '../../ui/Button';
+import { demoCourses } from '../../../data/mvpData';
 
 interface CoursesManagementProps {
   user: User;
+}
+
+interface CourseFormData {
+  title: string;
+  description: string;
+  category: 'programming' | 'design' | 'data' | 'marketing';
+  duration: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  price: number;
+  currency: string;
+  isActive: boolean;
 }
 
 export function CoursesManagement({ user }: CoursesManagementProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mock data - esto vendría de una API
-  const [courses, setCourses] = useState<Course[]>([
-    {
-      id: '1',
-      title: 'Full Stack Web Development',
-      description: 'Aprende desarrollo web completo con JavaScript, React, Node.js y bases de datos.',
-      category: 'programming',
-      duration: '6 meses',
-      level: 'intermediate',
-      price: 2500,
-      currency: 'USD',
-      isActive: true,
-      thumbnail: '/api/placeholder/300/200',
-      createdAt: '2024-01-15',
-      updatedAt: '2025-01-10',
-      createdBy: user.id
-    },
-    {
-      id: '2', 
-      title: 'Data Science & Analytics',
-      description: 'Domina Python, Machine Learning, estadística y visualización de datos.',
-      category: 'data',
-      duration: '8 meses',
-      level: 'advanced',
-      price: 3000,
-      currency: 'USD',
-      isActive: true,
-      thumbnail: '/api/placeholder/300/200',
-      createdAt: '2024-02-20',
-      updatedAt: '2025-01-08',
-      createdBy: user.id
-    },
-    {
-      id: '3',
-      title: 'UX/UI Design Bootcamp',
-      description: 'Diseña experiencias digitales increíbles con Figma, Adobe XD y metodologías UX.',
-      category: 'design',
-      duration: '4 meses',
-      level: 'beginner',
-      price: 1800,
-      currency: 'USD',
-      isActive: false,
-      thumbnail: '/api/placeholder/300/200',
-      createdAt: '2024-03-10',
-      updatedAt: '2025-01-05',
-      createdBy: user.id
-    }
-  ]);
+  // Use demo data as initial state
+  const [courses, setCourses] = useState<Course[]>(demoCourses);
+
+  // Form data for create/edit
+  const [formData, setFormData] = useState<CourseFormData>({
+    title: '',
+    description: '',
+    category: 'programming',
+    duration: '',
+    level: 'beginner',
+    price: 0,
+    currency: 'USD',
+    isActive: true
+  });
 
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -101,6 +85,96 @@ export function CoursesManagement({ user }: CoursesManagementProps) {
     }
   };
 
+  const handleCreateCourse = () => {
+    setFormData({
+      title: '',
+      description: '',
+      category: 'programming',
+      duration: '',
+      level: 'beginner',
+      price: 0,
+      currency: 'USD',
+      isActive: true
+    });
+    setShowCreateModal(true);
+  };
+
+  const handleEditCourse = (course: Course) => {
+    setSelectedCourse(course);
+    setFormData({
+      title: course.title,
+      description: course.description,
+      category: course.category,
+      duration: course.duration,
+      level: course.level,
+      price: course.price,
+      currency: course.currency,
+      isActive: course.isActive
+    });
+    setShowEditModal(true);
+  };
+
+  const handleDeleteCourse = (course: Course) => {
+    setSelectedCourse(course);
+    setShowDeleteModal(true);
+  };
+
+  const handleSubmit = async (isEdit: boolean = false) => {
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    if (isEdit && selectedCourse) {
+      // Update existing course
+      setCourses(prev => prev.map(course => 
+        course.id === selectedCourse.id 
+          ? { ...course, ...formData, updatedAt: new Date().toISOString() }
+          : course
+      ));
+      setShowEditModal(false);
+    } else {
+      // Create new course
+      const newCourse: Course = {
+        id: Math.random().toString(36).substring(7),
+        ...formData,
+        thumbnail: '/api/placeholder/300/200',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        createdBy: user.id
+      };
+      setCourses(prev => [...prev, newCourse]);
+      setShowCreateModal(false);
+    }
+
+    setIsSubmitting(false);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedCourse) return;
+    
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setCourses(prev => prev.filter(course => course.id !== selectedCourse.id));
+    setShowDeleteModal(false);
+    setSelectedCourse(null);
+    setIsSubmitting(false);
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      category: 'programming',
+      duration: '',
+      level: 'beginner',
+      price: 0,
+      currency: 'USD',
+      isActive: true
+    });
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -110,7 +184,7 @@ export function CoursesManagement({ user }: CoursesManagementProps) {
           <p className="text-gray-600">Administra todos los cursos de la plataforma</p>
         </div>
         <Button
-          onClick={() => setShowCreateModal(true)}
+          onClick={handleCreateCourse}
           variant="primary"
           className="flex items-center gap-2"
         >
@@ -213,10 +287,20 @@ export function CoursesManagement({ user }: CoursesManagementProps) {
                   <Button variant="ghost" size="sm" className="p-2">
                     <Eye size={16} />
                   </Button>
-                  <Button variant="ghost" size="sm" className="p-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-2"
+                    onClick={() => handleEditCourse(course)}
+                  >
                     <Edit size={16} />
                   </Button>
-                  <Button variant="ghost" size="sm" className="p-2 text-red-600 hover:text-red-700">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="p-2 text-red-600 hover:text-red-700"
+                    onClick={() => handleDeleteCourse(course)}
+                  >
                     <Trash2 size={16} />
                   </Button>
                 </div>
@@ -238,21 +322,25 @@ export function CoursesManagement({ user }: CoursesManagementProps) {
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron cursos</h3>
           <p className="text-gray-600 mb-4">Ajusta los filtros o crea un nuevo curso</p>
-          <Button onClick={() => setShowCreateModal(true)}>
+          <Button onClick={handleCreateCourse}>
             Crear Primer Curso
           </Button>
         </div>
       )}
 
-      {/* Create Course Modal (placeholder) */}
+      {/* Create/Edit Course Modal */}
       <AnimatePresence>
-        {showCreateModal && (
+        {(showCreateModal || showEditModal) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-            onClick={() => setShowCreateModal(false)}
+            onClick={() => {
+              setShowCreateModal(false);
+              setShowEditModal(false);
+              resetForm();
+            }}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
@@ -261,16 +349,224 @@ export function CoursesManagement({ user }: CoursesManagementProps) {
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             >
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Crear Nuevo Curso</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">
+                  {showEditModal ? 'Editar Curso' : 'Crear Nuevo Curso'}
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setShowEditModal(false);
+                    resetForm();
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(showEditModal);
+              }} className="space-y-4">
+                {/* Title */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Título del Curso *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ej: Full Stack Web Development"
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Descripción *
+                  </label>
+                  <textarea
+                    required
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Describe el contenido del curso..."
+                  />
+                </div>
+
+                {/* Category and Level */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Categoría *
+                    </label>
+                    <select
+                      required
+                      value={formData.category}
+                      onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value as 'programming' | 'design' | 'data' | 'marketing' }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="programming">Programación</option>
+                      <option value="data">Data Science</option>
+                      <option value="design">Diseño</option>
+                      <option value="marketing">Marketing</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Nivel *
+                    </label>
+                    <select
+                      required
+                      value={formData.level}
+                      onChange={(e) => setFormData(prev => ({ ...prev, level: e.target.value as 'beginner' | 'intermediate' | 'advanced' }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="beginner">Principiante</option>
+                      <option value="intermediate">Intermedio</option>
+                      <option value="advanced">Avanzado</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Duration and Price */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Duración *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.duration}
+                      onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ej: 6 meses"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Precio *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        value={formData.price}
+                        onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="0"
+                      />
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        USD
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Active Status */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                    Curso activo
+                  </label>
+                </div>
+
+                {/* Form Actions */}
+                <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      setShowCreateModal(false);
+                      setShowEditModal(false);
+                      resetForm();
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={isSubmitting}
+                    className="flex items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Guardando...
+                      </>
+                    ) : (
+                      <>
+                        <Save size={16} />
+                        {showEditModal ? 'Actualizar Curso' : 'Crear Curso'}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-xl p-6 w-full max-w-md"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <AlertCircle size={20} className="text-red-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Eliminar Curso</h3>
+              </div>
+              
               <p className="text-gray-600 mb-6">
-                Formulario para crear curso - Esta funcionalidad se implementará próximamente
+                ¿Estás seguro de que quieres eliminar el curso "{selectedCourse?.title}"? 
+                Esta acción no se puede deshacer.
               </p>
+
               <div className="flex gap-3 justify-end">
-                <Button variant="ghost" onClick={() => setShowCreateModal(false)}>
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowDeleteModal(false)}
+                  disabled={isSubmitting}
+                >
                   Cancelar
                 </Button>
-                <Button variant="primary">
-                  Crear Curso
+                <Button
+                  variant="primary"
+                  onClick={confirmDelete}
+                  disabled={isSubmitting}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  {isSubmitting ? 'Eliminando...' : 'Eliminar'}
                 </Button>
               </div>
             </motion.div>

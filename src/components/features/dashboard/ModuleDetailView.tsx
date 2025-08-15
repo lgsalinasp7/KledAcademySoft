@@ -3,6 +3,8 @@ import { ChevronLeft, Clock, CheckCircle, Circle } from 'lucide-react';
 import { module0Lessons } from '../../../data/lessons';
 import { ProgressBar } from '../../ui/ProgressBar';
 import { Button } from '../../ui/Button';
+import { useProgress } from '../../../hooks/useProgress';
+import { useAuth } from '../../../hooks/useAuth';
 
 interface ModuleDetailViewProps {
   moduleId: string;
@@ -11,9 +13,28 @@ interface ModuleDetailViewProps {
 }
 
 export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDetailViewProps) {
+  const { user } = useAuth();
+  const { progress, updateLessonProgress, isLessonCompleted } = useProgress(
+    user?.id || '5', // Default to Laura's ID for demo
+    '1' // Course ID for Full Stack
+  );
+
   const lessons = module0Lessons;
-  const completedLessons = lessons.filter(lesson => lesson.completed).length;
+  
+  // Calculate progress based on real data
+  const completedLessons = lessons.filter(lesson => 
+    isLessonCompleted(moduleId, lesson.id)
+  ).length;
+  
   const progressPercentage = (completedLessons / lessons.length) * 100;
+
+  const handleLessonClick = (lessonId: string) => {
+    if (lessonId === 'FSM0L1') {
+      // Mark lesson as completed when clicked
+      updateLessonProgress(moduleId, lessonId, true);
+      onLessonClick('FSM0L1');
+    }
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -53,44 +74,48 @@ export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDeta
 
         {/* Lessons List */}
         <div className="space-y-3">
-          {lessons.map((lesson, index) => (
-            <div
-              key={lesson.id}
-              onClick={() => lesson.id === 'FSM0L1' && onLessonClick(lesson.code)}
-              className={`bg-gray-900 rounded-xl p-4 border border-gray-800 ${
-                lesson.id === 'FSM0L1' 
-                  ? 'cursor-pointer hover:bg-gray-800 transition-colors' 
-                  : 'opacity-75'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    lesson.completed ? 'bg-green-500 text-white' : 'bg-gray-700 text-gray-400'
-                  }`}>
-                    {lesson.completed ? <CheckCircle size={16} /> : <Circle size={16} />}
-                  </div>
-                  <div>
-                    <h3 className="text-white font-medium">{lesson.title}</h3>
-                    <p className="text-sm text-gray-400">
-                      {lesson.code} • {lesson.duration}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  {lesson.completed && (
-                    <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Completado
+          {lessons.map((lesson, index) => {
+            const isCompleted = isLessonCompleted(moduleId, lesson.id);
+            
+            return (
+              <div
+                key={lesson.id}
+                onClick={() => lesson.id === 'FSM0L1' && handleLessonClick(lesson.id)}
+                className={`bg-gray-900 rounded-xl p-4 border border-gray-800 ${
+                  lesson.id === 'FSM0L1' 
+                    ? 'cursor-pointer hover:bg-gray-800 transition-colors' 
+                    : 'opacity-75'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      isCompleted ? 'bg-green-500 text-white' : 'bg-gray-700 text-gray-400'
+                    }`}>
+                      {isCompleted ? <CheckCircle size={16} /> : <Circle size={16} />}
                     </div>
-                  )}
-                  <div className="flex items-center gap-1 text-gray-400">
-                    <Clock size={14} />
-                    <span className="text-sm">{lesson.duration}</span>
+                    <div>
+                      <h3 className="text-white font-medium">{lesson.title}</h3>
+                      <p className="text-sm text-gray-400">
+                        {lesson.code} • {lesson.duration}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {isCompleted && (
+                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Completado
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1 text-gray-400">
+                      <Clock size={14} />
+                      <span className="text-sm">{lesson.duration}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         </div>
       </div>
