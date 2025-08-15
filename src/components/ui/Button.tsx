@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
   variant?: 'primary' | 'secondary' | 'ghost' | 'yellow';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
@@ -14,6 +15,7 @@ interface ButtonProps {
 export function Button({ 
   children, 
   onClick, 
+  type = 'button',
   variant = 'primary', 
   size = 'md',
   disabled = false,
@@ -47,6 +49,7 @@ export function Button({
 
   return (
     <ButtonComponent
+      type={type}
       onClick={disabled ? undefined : onClick}
       className={buttonClasses}
       disabled={disabled}

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Logo } from '../../ui/Logo';
 import { LoginForm } from './LoginForm';
 
+
 interface LoginPageProps {
   onLogin: (userData: { name: string; email: string }) => void;
 }

@@ -32,8 +32,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
     if (!password) {
       newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (password.length < 3) {
+      newErrors.password = 'Password must be at least 3 characters';
     }
 
     setErrors(newErrors);
@@ -41,8 +41,18 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       setTimeout(() => {
+        // Determinar el nombre según el email para mejor UX
+        let userName = 'Usuario';
+        if (email.includes('admin')) {
+          userName = 'Administrador';
+        } else if (email.includes('teacher')) {
+          userName = 'Profesor';
+        } else if (email.includes('student')) {
+          userName = 'Estudiante';
+        }
+        
         onLogin({
-          name: 'Daniela Sofia Salinas Ospino',
+          name: userName,
           email: email
         });
         setIsLoading(false);
@@ -98,10 +108,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
           type="email" 
           value={email} 
           onChange={e => setEmail(e.target.value)} 
-          className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 ${
+          className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500 ${
             errors.email ? 'border-red-500' : 'border-slate-300'
           }`} 
-          placeholder="Enter your email" 
+                     placeholder="student@gmail.com, admin@kaledacademy.com, teacher@kaledacademy.com"  
         />
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
       </div>
@@ -117,10 +127,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             type={showPassword ? 'text' : 'password'} 
             value={password} 
             onChange={e => setPassword(e.target.value)} 
-            className={`w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 ${
+            className={`w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-500 ${
               errors.password ? 'border-red-500' : 'border-slate-300'
             }`} 
-            placeholder="Enter your password" 
+            placeholder="Cualquier contraseña (mínimo 3 caracteres)" 
           />
           <button 
             type="button" 
