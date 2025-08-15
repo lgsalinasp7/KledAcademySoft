@@ -1,0 +1,40 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular con gradiente oscuro -->
+  <defs>
+    <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <circle cx="60" cy="60" r="60" fill="url(#gradient)"/>
+  
+  <!-- Dos hexágonos entrelazados - diseño más simple y limpio -->
+  <g stroke="#06b6d4" stroke-width="2" fill="none" opacity="0.9">
+    <!-- Hexágono izquierdo -->
+    <path d="M35 40 L50 32 L65 40 L65 56 L50 64 L35 56 Z"/>
+    
+    <!-- Hexágono derecho superpuesto -->
+    <path d="M55 40 L70 32 L85 40 L85 56 L70 64 L55 56 Z"/>
+  </g>
+  
+  <!-- Tres puntos moleculares conectados -->
+  <g fill="#06b6d4">
+    <circle cx="50" cy="48" r="3"/>
+    <circle cx="70" cy="48" r="3"/>
+    <circle cx="60" cy="58" r="3"/>
+  </g>
+  
+  <!-- Líneas de conexión entre los puntos -->
+  <g stroke="#06b6d4" stroke-width="1.5" opacity="0.8">
+    <line x1="50" y1="48" x2="70" y2="48"/>
+    <line x1="50" y1="48" x2="60" y2="58"/>
+    <line x1="70" y1="48" x2="60" y2="58"/>
+  </g>
+  
+  <!-- Texto KALED -->
+  <text x="60" y="85" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#06b6d4">KALED</text>
+  
+  <!-- Texto ACADEMY -->
+  <text x="60" y="97" font-family="Inter, Arial, sans-serif" font-size="7" font-weight="normal" text-anchor="middle" fill="#9ca3af" letter-spacing="1.5px">ACADEMY</text>
+</svg>

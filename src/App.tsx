@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Container, Theme } from './settings/types';
-import { KaledAcademyApp } from './components/generated/KaledAcademyApp';
+import { KaledAcademyApp } from './components/KaledAcademyApp';
 
-let theme: Theme = 'light';
+const theme: Theme = 'dark';
 // only use 'centered' container for standalone components, never for full page apps or websites.
-let container: Container = 'none';
+const container: Container = 'none';
 
 function App() {
   function setTheme(theme: Theme) {
