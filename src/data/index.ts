@@ -6,3 +6,4 @@ export {
   module0Lessons 
 } from './lessons';
 export { videoRecordings } from './videos';
+export * from './mvpData';

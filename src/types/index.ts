@@ -177,3 +177,53 @@ export interface UserDropdownProps {
   showDropdown: boolean;
   onToggleDropdown: () => void;
 }
+
+// MVP Progress Types
+export interface StudentProgress {
+  userId: string;
+  courseId: string;
+  moduleProgress: {
+    moduleId: string;
+    completedLessons: string[];
+    currentLesson: string;
+    progress: number;
+  }[];
+  overallProgress: number;
+  lastActivity: string;
+}
+
+export interface Evaluation {
+  id: string;
+  lessonId: string;
+  studentId: string;
+  score: number;
+  maxScore: number;
+  feedback: string;
+  submittedAt: string;
+  gradedBy: string;
+  gradedAt: string;
+}
+
+export interface Message {
+  id: string;
+  from: string;
+  to: string;
+  subject: string;
+  content: string;
+  read: boolean;
+  timestamp: string;
+  attachments?: string[];
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  duration: number;
+  type: 'live-session' | 'deadline' | 'assignment' | 'meeting';
+  participants: string[];
+  courseId?: string;
+  cohortId?: string;
+}
