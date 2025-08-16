@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { devtools } from 'zustand/middleware';
-import { persist } from 'zustand/middleware';
 
 // Datos mock para desarrollo
 const mockUsers = [
@@ -49,121 +48,119 @@ export const useAuthStore = create<AuthState>()(
   subscribeWithSelector(
     devtools(
       (set, get) => ({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
+        // Estado inicial
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
 
-          signIn: async (email: string, password: string) => {
-            set({ isLoading: true });
+        signIn: async (email: string, password: string) => {
+          console.log('AuthStore: signIn called with:', { email, password });
+          set({ isLoading: true });
+          
+          try {
+            // Simular delay de red
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            try {
-              // Simular delay de red
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              
-              // Buscar usuario en datos mock
-              const user = mockUsers.find(u => u.email === email && u.password === password);
-              
-              if (user) {
-                const { password: _, ...userWithoutPassword } = user;
-                set({
-                  user: userWithoutPassword,
-                  isAuthenticated: true,
-                  isLoading: false
-                });
-                return { success: true };
-              } else {
-                set({ isLoading: false });
-                return { 
-                  success: false, 
-                  error: 'Credenciales inválidas. Usa los usuarios de prueba.' 
-                };
-              }
-            } catch (error) {
-              set({ isLoading: false });
-              return { 
-                success: false, 
-                error: 'Error de conexión' 
-              };
-            }
-          },
-
-          signOut: () => {
-            set({
-              user: null,
-              isAuthenticated: false,
-              isLoading: false
-            });
-          },
-
-          signUp: async (email: string, password: string, name: string) => {
-            set({ isLoading: true });
+            // Buscar usuario en datos mock
+            const user = mockUsers.find(u => u.email === email && u.password === password);
+            console.log('AuthStore: found user:', user);
             
-            try {
-              // Simular delay de red
-              await new Promise(resolve => setTimeout(resolve, 1000));
-              
-              // Verificar si el usuario ya existe
-              const existingUser = mockUsers.find(u => u.email === email);
-              if (existingUser) {
-                set({ isLoading: false });
-                return { 
-                  success: false, 
-                  error: 'El usuario ya existe' 
-                };
-              }
-              
-              // Crear nuevo usuario (en un caso real, esto iría a la base de datos)
-              const newUser = {
-                id: Date.now().toString(),
-                email,
-                name,
-                role: 'STUDENT' as const
-              };
-              
+            if (user) {
+              const { password: _, ...userWithoutPassword } = user;
               set({
-                user: newUser,
+                user: userWithoutPassword,
                 isAuthenticated: true,
                 isLoading: false
               });
-              
+              console.log('AuthStore: login successful');
               return { success: true };
-            } catch (error) {
+            } else {
+              set({ isLoading: false });
+              console.log('AuthStore: login failed - invalid credentials');
+              return { 
+                success: false, 
+                error: 'Credenciales inválidas. Usa los usuarios de prueba.' 
+              };
+            }
+          } catch (error) {
+            console.error('AuthStore: login error:', error);
+            set({ isLoading: false });
+            return { 
+              success: false, 
+              error: 'Error de conexión' 
+            };
+          }
+        },
+
+        signOut: () => {
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false
+          });
+        },
+
+        signUp: async (email: string, password: string, name: string) => {
+          set({ isLoading: true });
+          
+          try {
+            // Simular delay de red
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Verificar si el usuario ya existe
+            const existingUser = mockUsers.find(u => u.email === email);
+            if (existingUser) {
               set({ isLoading: false });
               return { 
                 success: false, 
-                error: 'Error al crear la cuenta' 
+                error: 'El usuario ya existe' 
               };
             }
-          },
-
-          checkAuth: async () => {
-            set({ isLoading: true });
             
-            try {
-              // En un caso real, aquí verificarías el token con Supabase
-              // Por ahora, solo simulamos un delay
-              await new Promise(resolve => setTimeout(resolve, 500));
-              
-              // Si hay un usuario en el estado, lo mantenemos
-              const { user } = get();
-              if (user) {
-                set({ isAuthenticated: true, isLoading: false });
-              } else {
-                set({ isAuthenticated: false, isLoading: false });
-              }
-            } catch (error) {
+            // Crear nuevo usuario (en un caso real, esto iría a la base de datos)
+            const newUser = {
+              id: Date.now().toString(),
+              email,
+              name,
+              role: 'STUDENT' as const
+            };
+            
+            set({
+              user: newUser,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            
+            return { success: true };
+          } catch (error) {
+            set({ isLoading: false });
+            return { 
+              success: false, 
+              error: 'Error al crear la cuenta' 
+            };
+          }
+        },
+
+        checkAuth: async () => {
+          set({ isLoading: true });
+          
+          try {
+            // En un caso real, aquí verificarías el token con Supabase
+            // Por ahora, solo simulamos un delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Si hay un usuario en el estado, lo mantenemos
+            const { user } = get();
+            if (user) {
+              set({ isAuthenticated: true, isLoading: false });
+            } else {
               set({ isAuthenticated: false, isLoading: false });
             }
+          } catch (error) {
+            set({ isAuthenticated: false, isLoading: false });
           }
-        }),
-        {
-          name: 'auth-storage',
-          partialize: (state) => ({ 
-            user: state.user, 
-            isAuthenticated: state.isAuthenticated 
-          })
         }
-      ),
+      }),
       {
         name: 'auth-store',
         enabled: process.env.NODE_ENV === 'development'

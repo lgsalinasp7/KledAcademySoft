@@ -18,6 +18,8 @@ export default function LoginPage() {
   
   const { signIn } = useAuthStore();
   const router = useRouter();
+  
+  console.log('LoginPage: useAuthStore loaded, signIn function:', typeof signIn);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +65,17 @@ export default function LoginPage() {
       setError("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleTestStore = () => {
+    console.log('Testing store...');
+    try {
+      const store = useAuthStore.getState();
+      console.log('Store state:', store);
+      console.log('Store signIn function:', typeof store.signIn);
+    } catch (error) {
+      console.error('Store test error:', error);
     }
   };
 
