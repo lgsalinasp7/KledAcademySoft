@@ -1,19 +1,21 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Home, Building, Square, BookOpen, Users, Users2, Settings, Shield } from 'lucide-react';
+import { Home, Building, Square, BookOpen, Users, Users2, Settings, Shield, BarChart3, Calendar, UserCheck } from 'lucide-react';
 import { Logo } from '../ui/Logo';
+import { useApp } from '../../hooks/useApp';
 
 interface NavigationProps {
-  currentView: string;
-  onViewChange: (view: string) => void;
   userRole?: string;
 }
 
-export function MainSidebar({ currentView, onViewChange, userRole }: NavigationProps) {
-  const isAdmin = userRole && ['ADMIN', 'SUPER_ADMIN'].includes(userRole);
-  const isTeacher = userRole === 'TEACHER';
+export function MainSidebar({ userRole }: NavigationProps) {
+  const pathname = usePathname();
+  const currentView = pathname.split('/').pop() || 'home';
+  const { isAdmin, isTeacher, showInfo } = useApp();
 
   const studentNavigationItems = [
     {
@@ -22,6 +24,13 @@ export function MainSidebar({ currentView, onViewChange, userRole }: NavigationP
       icon: Home,
       view: 'home',
       active: currentView === 'home'
+    },
+    {
+      id: 'demo',
+      label: 'Demo Store',
+      icon: Square,
+      view: 'demo',
+      active: currentView === 'demo'
     },
     {
       id: 'payment-management',
@@ -76,18 +85,32 @@ export function MainSidebar({ currentView, onViewChange, userRole }: NavigationP
       active: currentView === 'admin-credentials'
     },
     {
-      id: 'payment-management',
-      label: 'Gestión de Pagos',
-      icon: Building,
-      view: 'payment-management',
-      active: currentView === 'payment-management'
+      id: 'admin-roles',
+      label: 'Gestión de Roles',
+      icon: UserCheck,
+      view: 'admin-roles',
+      active: currentView === 'admin-roles'
     },
     {
-      id: 'settings',
+      id: 'admin-settings',
       label: 'Configuraciones',
       icon: Settings,
-      view: 'settings',
-      active: currentView === 'settings'
+      view: 'admin-settings',
+      active: currentView === 'admin-settings'
+    },
+    {
+      id: 'admin-analytics',
+      label: 'Analytics',
+      icon: BarChart3,
+      view: 'admin-analytics',
+      active: currentView === 'admin-analytics'
+    },
+    {
+      id: 'admin-calendar',
+      label: 'Calendario',
+      icon: Calendar,
+      view: 'admin-calendar',
+      active: currentView === 'admin-calendar'
     }
   ];
 
@@ -151,34 +174,38 @@ export function MainSidebar({ currentView, onViewChange, userRole }: NavigationP
 
       {/* Main Navigation */}
       <nav className="flex-1 py-6">
-        <div className="space-y-2 px-4">
-          {navigationItems.map(item => {
-            const Icon = item.icon;
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => onViewChange(item.view)}
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
-                  item.active 
-                    ? 'bg-gray-800 text-white border-l-4 border-yellow-400' 
-                    : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                }`}
-              >
-                <Icon 
-                  size={20} 
-                  className={`${
-                    item.active 
-                      ? 'text-yellow-400' 
-                      : 'text-gray-400 group-hover:text-white'
-                  }`} 
-                />
-                <span className="font-medium text-sm">{item.label}</span>
-              </motion.button>
-            );
-          })}
-        </div>
+                 <div className="space-y-2 px-4">
+           {navigationItems.map(item => {
+             const Icon = item.icon;
+             return (
+               <Link
+                 key={item.id}
+                 href={`/dashboard/${item.view}`}
+                 className={`block w-full`}
+               >
+                 <motion.div
+                   whileHover={{ x: 4 }}
+                   whileTap={{ scale: 0.98 }}
+                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
+                     item.active 
+                       ? 'bg-gray-800 text-white border-l-4 border-yellow-400' 
+                       : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                   }`}
+                 >
+                   <Icon 
+                     size={20} 
+                     className={`${
+                       item.active 
+                         ? 'text-yellow-400' 
+                         : 'text-gray-400 group-hover:text-white'
+                     }`} 
+                   />
+                   <span className="font-medium text-sm">{item.label}</span>
+                 </motion.div>
+               </Link>
+             );
+           })}
+         </div>
       </nav>
     </div>
   );

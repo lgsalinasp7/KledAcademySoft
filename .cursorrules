@@ -1,0 +1,346 @@
+# Cursor Rules para KaledAcademy
+
+## Stack Tecnológico Principal
+
+Este proyecto utiliza las siguientes tecnologías principales:
+
+### Framework y Runtime
+- **Next.js 14** - Framework de React con App Router
+- **TypeScript** - Tipado estático
+- **React 18** - Biblioteca de UI
+
+### Estado Global
+- **Zustand** - Manejo de estado global con stores modulares
+- **React Hook Form** - Manejo de formularios
+- **Zod** - Validación de esquemas
+
+### Base de Datos y ORM
+- **Prisma** - ORM para TypeScript
+- **PostgreSQL** - Base de datos relacional
+- **Supabase** - Plataforma de base de datos
+
+### Sistema de Diseño
+- **Tailwind CSS** - Framework de CSS utility-first
+- **Shadcn UI** - Sistema de componentes basado en Radix UI
+- **Radix UI** - Componentes primitivos accesibles
+- **Lucide React** - Iconografía
+
+## Reglas de Desarrollo
+
+### 1. Estructura de Archivos y Carpetas
+
+```
+├── app/                    # App Router de Next.js 14
+├── components/            # Componentes reutilizables
+│   ├── ui/               # Componentes de Shadcn UI
+│   ├── layout/           # Componentes de layout
+│   └── features/         # Componentes específicos de features
+├── lib/                  # Utilidades y configuraciones
+├── stores/               # Stores de Zustand
+├── hooks/                # Custom hooks
+├── types/                # Definiciones de tipos TypeScript
+├── prisma/               # Esquema y migraciones de Prisma
+└── public/               # Archivos estáticos
+```
+
+### 2. Convenciones de Nomenclatura
+
+- **Componentes**: PascalCase (ej: `UserProfile.tsx`)
+- **Hooks**: camelCase con prefijo `use` (ej: `useAuth.ts`)
+- **Stores**: camelCase con sufijo `Store` (ej: `authStore.ts`)
+- **Tipos**: PascalCase (ej: `User`, `Course`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `API_ENDPOINTS`)
+- **Variables y funciones**: camelCase
+
+### 3. Reglas para Componentes
+
+#### Estructura de Componentes
+```typescript
+// Siempre usar TypeScript con interfaces
+interface ComponentProps {
+  // Props tipadas
+}
+
+// Usar React.FC o función con tipado explícito
+export const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  // Lógica del componente
+  return (
+    // JSX
+  );
+};
+```
+
+#### Imports Organizados
+```typescript
+// 1. React y Next.js
+import React from 'react';
+import { useRouter } from 'next/navigation';
+
+// 2. Librerías externas
+import { create } from 'zustand';
+
+// 3. Componentes de UI (Shadcn)
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+
+// 4. Stores de Zustand
+import { useAuthStore } from '@/stores';
+
+// 5. Hooks personalizados
+import { useCustomHook } from '@/hooks/useCustomHook';
+
+// 6. Utilidades
+import { cn } from '@/lib/utils';
+
+// 7. Tipos
+import type { User } from '@/types';
+```
+
+### 4. Reglas para Zustand Stores
+
+#### Estructura de Store
+```typescript
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
+
+interface StoreState {
+  // Estado
+  data: any[];
+  isLoading: boolean;
+  
+  // Acciones
+  fetchData: () => Promise<void>;
+  setData: (data: any[]) => void;
+}
+
+export const useStore = create<StoreState>()(
+  subscribeWithSelector(
+    devtools(
+      persist(
+        (set, get) => ({
+          // Estado inicial
+          data: [],
+          isLoading: false,
+          
+          // Acciones
+          fetchData: async () => {
+            set({ isLoading: true });
+            try {
+              // Lógica de fetch
+              set({ isLoading: false });
+            } catch (error) {
+              set({ isLoading: false });
+            }
+          },
+          
+          setData: (data) => set({ data }),
+        }),
+        {
+          name: 'store-name',
+        }
+      )
+    )
+  )
+);
+```
+
+### 5. Reglas para Prisma
+
+#### Consultas de Base de Datos
+```typescript
+// Usar el cliente de Prisma desde lib/prisma
+import { prisma } from '@/lib/prisma';
+
+// Siempre manejar errores
+try {
+  const data = await prisma.model.findMany({
+    where: { /* condiciones */ },
+    include: { /* relaciones */ },
+  });
+} catch (error) {
+  console.error('Error en consulta Prisma:', error);
+  throw error;
+}
+```
+
+#### Tipos de Prisma
+```typescript
+// Importar tipos generados por Prisma
+import type { User, Course } from '@prisma/client';
+
+// Para incluir relaciones
+import type { UserWithCourses } from '@/types';
+```
+
+### 6. Reglas para Styling con Tailwind + Shadcn
+
+#### Clases de Tailwind
+```typescript
+// Usar la función cn para combinar clases
+import { cn } from '@/lib/utils';
+
+const className = cn(
+  'base-classes',
+  'conditional-classes',
+  variant && 'variant-classes'
+);
+```
+
+#### Componentes de Shadcn
+```typescript
+// Usar componentes de Shadcn UI
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Seguir las variantes de Shadcn
+<Button variant="default" size="sm">
+  Acción
+</Button>
+```
+
+### 7. Reglas para API Routes (Next.js)
+
+#### Estructura de API Route
+```typescript
+// app/api/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(request: NextRequest) {
+  try {
+    // Lógica de la API
+    return NextResponse.json({ data });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    // Validación con Zod
+    // Lógica de la API
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### 8. Reglas para Validación
+
+#### Esquemas de Zod
+```typescript
+import { z } from 'zod';
+
+const userSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(2),
+  role: z.enum(['STUDENT', 'TEACHER', 'ADMIN']),
+});
+
+type UserInput = z.infer<typeof userSchema>;
+```
+
+### 9. Reglas para Manejo de Errores
+
+#### Try-Catch en Operaciones Async
+```typescript
+try {
+  const result = await asyncOperation();
+  return result;
+} catch (error) {
+  console.error('Error en operación:', error);
+  // Manejar error apropiadamente
+  throw new Error('Mensaje de error amigable');
+}
+```
+
+### 10. Reglas para Performance
+
+#### Optimizaciones de Next.js
+- Usar `use client` solo cuando sea necesario
+- Implementar loading.tsx y error.tsx en rutas
+- Usar Image component de Next.js para imágenes
+- Implementar lazy loading para componentes pesados
+
+#### Optimizaciones de React
+- Usar React.memo para componentes que no cambian frecuentemente
+- Implementar useMemo y useCallback cuando sea apropiado
+- Evitar re-renders innecesarios
+
+### 11. Reglas para Accesibilidad
+
+- Usar componentes de Radix UI que ya incluyen accesibilidad
+- Implementar atributos ARIA cuando sea necesario
+- Asegurar contraste de colores adecuado
+- Probar con lectores de pantalla
+
+### 12. Reglas para Testing
+
+- Escribir tests para lógica de negocio crítica
+- Usar mocks para servicios externos
+- Testear stores de Zustand de forma aislada
+- Implementar tests de integración para API routes
+
+### 13. Reglas para Deployment
+
+- Usar variables de entorno para configuraciones
+- Implementar validación de esquemas en producción
+- Configurar logging apropiado
+- Implementar monitoreo de errores
+
+### 14. Comandos Importantes
+
+```bash
+# Desarrollo
+npm run dev
+
+# Build
+npm run build
+
+# Base de datos
+npm run db:push      # Push del esquema
+npm run db:studio    # Abrir Prisma Studio
+npm run db:generate  # Regenerar cliente Prisma
+
+# Linting y formateo
+npm run lint
+npm run format
+```
+
+### 15. Variables de Entorno Requeridas
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+# Base de datos
+DATABASE_URL=
+
+# Next.js
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+```
+
+## Recordatorios Importantes
+
+1. **Siempre usar TypeScript** - No usar `any` sin justificación
+2. **Seguir las convenciones de nomenclatura** - Mantener consistencia
+3. **Usar componentes de Shadcn UI** - No crear componentes desde cero si ya existen
+4. **Manejar estado con Zustand** - No usar Context API para estado global
+5. **Validar datos con Zod** - Especialmente en formularios y APIs
+6. **Manejar errores apropiadamente** - Siempre usar try-catch
+7. **Optimizar para performance** - Usar las optimizaciones de Next.js
+8. **Mantener accesibilidad** - Seguir estándares WCAG
+9. **Documentar código complejo** - Comentarios claros y concisos
+10. **Testear funcionalidad crítica** - Implementar tests cuando sea necesario

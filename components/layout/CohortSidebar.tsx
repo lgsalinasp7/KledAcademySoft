@@ -7,10 +7,9 @@ import { ProgressBar } from '../ui/ProgressBar';
 
 interface NavigationProps {
   currentView: string;
-  onViewChange: (view: string) => void;
 }
 
-export function CohortSidebar({ currentView, onViewChange }: NavigationProps) {
+export function CohortSidebar({ currentView }: NavigationProps) {
   const navigationItems = [
     {
       id: 'content',
@@ -70,9 +69,8 @@ export function CohortSidebar({ currentView, onViewChange }: NavigationProps) {
           {navigationItems.map(item => {
             const Icon = item.icon;
             return (
-              <motion.button
+              <motion.div
                 key={item.id}
-                onClick={() => onViewChange(item.view)}
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
@@ -90,7 +88,7 @@ export function CohortSidebar({ currentView, onViewChange }: NavigationProps) {
                   }`} 
                 />
                 <span className="font-medium text-sm">{item.label}</span>
-              </motion.button>
+              </motion.div>
             );
           })}
         </div>

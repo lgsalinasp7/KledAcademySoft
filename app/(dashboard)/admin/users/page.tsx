@@ -38,7 +38,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <UsersManagement user={user} />
+      <UsersManagement user={user as any} />
     </div>
   );
 }

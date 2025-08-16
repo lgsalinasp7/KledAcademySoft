@@ -42,18 +42,18 @@ export const useProgress = (userId: string, courseId: string) => {
     const moduleIndex = updatedProgress.moduleProgress.findIndex(m => m.moduleId === moduleId);
 
     if (moduleIndex >= 0) {
-      const module = updatedProgress.moduleProgress[moduleIndex];
+      const moduleProgress = updatedProgress.moduleProgress[moduleIndex];
       
-      if (completed && !module.completedLessons.includes(lessonId)) {
-        module.completedLessons.push(lessonId);
+      if (completed && !moduleProgress.completedLessons.includes(lessonId)) {
+        moduleProgress.completedLessons.push(lessonId);
       } else if (!completed) {
-        module.completedLessons = module.completedLessons.filter(id => id !== lessonId);
+        moduleProgress.completedLessons = moduleProgress.completedLessons.filter(id => id !== lessonId);
       }
 
       // Recalcular progreso del módulo
       // Esto debería venir de los datos del curso, pero por ahora usamos un valor fijo
       const totalLessons = 4; // Valor hardcodeado por ahora
-      module.progress = (module.completedLessons.length / totalLessons) * 100;
+      moduleProgress.progress = (moduleProgress.completedLessons.length / totalLessons) * 100;
     } else {
       // Crear nuevo módulo si no existe
       updatedProgress.moduleProgress.push({
@@ -66,7 +66,7 @@ export const useProgress = (userId: string, courseId: string) => {
 
     // Recalcular progreso general
     const totalModules = updatedProgress.moduleProgress.length;
-    const totalProgress = updatedProgress.moduleProgress.reduce((sum, module) => sum + module.progress, 0);
+    const totalProgress = updatedProgress.moduleProgress.reduce((sum, moduleProgress) => sum + moduleProgress.progress, 0);
     updatedProgress.overallProgress = totalModules > 0 ? totalProgress / totalModules : 0;
 
     updatedProgress.lastActivity = new Date().toISOString();

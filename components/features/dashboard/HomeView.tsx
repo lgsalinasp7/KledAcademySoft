@@ -18,6 +18,7 @@ import {
 import { Button } from '../../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { ProgressBar } from '../../ui/ProgressBar';
+import { useApp } from '../../../hooks/useApp';
 
 interface User {
   id: string;
@@ -33,9 +34,12 @@ interface HomeViewProps {
 }
 
 export function HomeView({ user, onNavigateToCareer, onLogout }: HomeViewProps) {
-  const progress = 25.5;
-  const totalModules = 6;
-  const completedModules = 1;
+  // Usar el hook optimizado para obtener datos del store
+  const { overallProgress, activeCourse, showSuccess } = useApp();
+  
+  const progress = overallProgress || 25.5;
+  const totalModules = activeCourse?.modules?.length || 6;
+  const completedModules = Math.floor((progress / 100) * totalModules);
 
   return (
     <div className="flex-1 bg-black p-6 overflow-y-auto">
@@ -78,7 +82,7 @@ export function HomeView({ user, onNavigateToCareer, onLogout }: HomeViewProps) 
                   <span className="text-gray-300">Progreso General</span>
                   <span className="text-yellow-400 font-semibold">{progress}%</span>
                 </div>
-                <ProgressBar progress={progress} />
+                <ProgressBar percentage={progress} />
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="text-center p-3 bg-gray-800 rounded-lg">
                     <div className="text-2xl font-bold text-green-400">{completedModules}</div>
@@ -112,7 +116,7 @@ export function HomeView({ user, onNavigateToCareer, onLogout }: HomeViewProps) 
               <p className="text-xs text-gray-400">Continúa tu aprendizaje</p>
               <div className="mt-2">
                 <span className="text-sm text-yellow-400">Completado: {progress}%</span>
-                <ProgressBar progress={progress} className="mt-1" />
+                <ProgressBar percentage={progress} />
               </div>
             </CardContent>
           </Card>
