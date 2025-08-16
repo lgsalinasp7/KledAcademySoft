@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relaciones
+  courses   Course[]
+  cohorts   Cohort[]  @relation("CohortTeachers")
+  students  Cohort[]  @relation("CohortStudents")
+  progress  StudentProgress[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  duration    String
+  level       String
+  price       Float
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relaciones
+  modules     Module[]
+  cohorts     Cohort[]
+  createdBy   User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Cohort {
+  id             String   @id @default(cuid())
+  name           String
+  startDate      DateTime
+  endDate        DateTime
+  maxStudents    Int
+  currentStudents Int      @default(0)
+  status         CohortStatus
+  schedule       Json
+  createdAt      DateTime @default(now())
+  
+  // Relaciones
+  course         Course   @relation(fields: [courseId], references: [id])
+  courseId       String
+  teachers       User[]   @relation("CohortTeachers")
+  students       User[]   @relation("CohortStudents")
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  order       Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  // Relaciones
+  course      Course   @relation(fields: [courseId], references: [id])
+  courseId    String
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  order       Int
+  duration    Int // minutos
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  // Relaciones
+  module      Module   @relation(fields: [moduleId], references: [id])
+  moduleId    String
+  progress    StudentProgress[]
+}
+
+model StudentProgress {
+  id        String   @id @default(cuid())
+  completed Boolean  @default(false)
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  
+  // Relaciones
+  student   User     @relation(fields: [studentId], references: [id])
+  studentId String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId  String
+  
+  @@unique([studentId, lessonId])
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum CohortStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}

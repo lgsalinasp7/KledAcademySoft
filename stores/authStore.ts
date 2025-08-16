@@ -1,0 +1,164 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+// Datos mock para desarrollo
+const mockUsers = [
+  {
+    id: '1',
+    email: 'student@gmail.com',
+    name: 'Estudiante Demo',
+    role: 'STUDENT' as const,
+    password: '123456'
+  },
+  {
+    id: '2',
+    email: 'teacher@kaledacademy.com',
+    name: 'Profesor Demo',
+    role: 'TEACHER' as const,
+    password: '123456'
+  },
+  {
+    id: '3',
+    email: 'admin@kaledacademy.com',
+    name: 'Administrador Demo',
+    role: 'ADMIN' as const,
+    password: '123456'
+  }
+];
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT';
+}
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signOut: () => void;
+  signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
+  checkAuth: () => Promise<void>;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+
+      signIn: async (email: string, password: string) => {
+        set({ isLoading: true });
+        
+        try {
+          // Simular delay de red
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Buscar usuario en datos mock
+          const user = mockUsers.find(u => u.email === email && u.password === password);
+          
+          if (user) {
+            const { password: _, ...userWithoutPassword } = user;
+            set({
+              user: userWithoutPassword,
+              isAuthenticated: true,
+              isLoading: false
+            });
+            return { success: true };
+          } else {
+            set({ isLoading: false });
+            return { 
+              success: false, 
+              error: 'Credenciales inválidas. Usa los usuarios de prueba.' 
+            };
+          }
+        } catch (error) {
+          set({ isLoading: false });
+          return { 
+            success: false, 
+            error: 'Error de conexión' 
+          };
+        }
+      },
+
+      signOut: () => {
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false
+        });
+      },
+
+      signUp: async (email: string, password: string, name: string) => {
+        set({ isLoading: true });
+        
+        try {
+          // Simular delay de red
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Verificar si el usuario ya existe
+          const existingUser = mockUsers.find(u => u.email === email);
+          if (existingUser) {
+            set({ isLoading: false });
+            return { 
+              success: false, 
+              error: 'El usuario ya existe' 
+            };
+          }
+          
+          // Crear nuevo usuario (en un caso real, esto iría a la base de datos)
+          const newUser = {
+            id: Date.now().toString(),
+            email,
+            name,
+            role: 'STUDENT' as const
+          };
+          
+          set({
+            user: newUser,
+            isAuthenticated: true,
+            isLoading: false
+          });
+          
+          return { success: true };
+        } catch (error) {
+          set({ isLoading: false });
+          return { 
+            success: false, 
+            error: 'Error al crear la cuenta' 
+          };
+        }
+      },
+
+      checkAuth: async () => {
+        set({ isLoading: true });
+        
+        try {
+          // En un caso real, aquí verificarías el token con Supabase
+          // Por ahora, solo simulamos un delay
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Si hay un usuario en el estado, lo mantenemos
+          const { user } = get();
+          if (user) {
+            set({ isAuthenticated: true, isLoading: false });
+          } else {
+            set({ isAuthenticated: false, isLoading: false });
+          }
+        } catch (error) {
+          set({ isAuthenticated: false, isLoading: false });
+        }
+      }
+    }),
+    {
+      name: 'auth-storage',
+      partialize: (state) => ({ 
+        user: state.user, 
+        isAuthenticated: state.isAuthenticated 
+      })
+    }
+  )
+);
