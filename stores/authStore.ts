@@ -54,7 +54,6 @@ export const useAuthStore = create<AuthState>()(
         isLoading: false,
 
         signIn: async (email: string, password: string) => {
-          console.log('AuthStore: signIn called with:', { email, password });
           set({ isLoading: true });
           
           try {
@@ -63,7 +62,6 @@ export const useAuthStore = create<AuthState>()(
             
             // Buscar usuario en datos mock
             const user = mockUsers.find(u => u.email === email && u.password === password);
-            console.log('AuthStore: found user:', user);
             
             if (user) {
               const { password: _, ...userWithoutPassword } = user;
@@ -72,18 +70,15 @@ export const useAuthStore = create<AuthState>()(
                 isAuthenticated: true,
                 isLoading: false
               });
-              console.log('AuthStore: login successful');
               return { success: true };
             } else {
               set({ isLoading: false });
-              console.log('AuthStore: login failed - invalid credentials');
               return { 
                 success: false, 
                 error: 'Credenciales inválidas. Usa los usuarios de prueba.' 
               };
             }
           } catch (error) {
-            console.error('AuthStore: login error:', error);
             set({ isLoading: false });
             return { 
               success: false, 

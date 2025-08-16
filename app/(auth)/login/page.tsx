@@ -18,64 +18,23 @@ export default function LoginPage() {
   
   const { signIn } = useAuthStore();
   const router = useRouter();
-  
-  console.log('LoginPage: useAuthStore loaded, signIn function:', typeof signIn);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted with:', { email, password });
     setIsLoading(true);
     setError("");
 
     try {
-      console.log('Calling signIn...');
       const result = await signIn(email, password);
-      console.log('SignIn result:', result);
       if (result.success) {
-        console.log('Login successful, redirecting...');
         router.push("/dashboard");
       } else {
         setError(result.error || "Credenciales inválidas");
       }
     } catch (err) {
-      console.error('Login error:', err);
       setError("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleTestLogin = async () => {
-    console.log('Test login clicked');
-    setIsLoading(true);
-    setError("");
-
-    try {
-      console.log('Calling signIn with test credentials...');
-      const result = await signIn('student@gmail.com', '123456');
-      console.log('Test login result:', result);
-      if (result.success) {
-        console.log('Test login successful, redirecting...');
-        router.push("/dashboard");
-      } else {
-        setError(result.error || "Credenciales inválidas");
-      }
-    } catch (err) {
-      console.error('Test login error:', err);
-      setError("Error al iniciar sesión");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleTestStore = () => {
-    console.log('Testing store...');
-    try {
-      const store = useAuthStore.getState();
-      console.log('Store state:', store);
-      console.log('Store signIn function:', typeof store.signIn);
-    } catch (error) {
-      console.error('Store test error:', error);
     }
   };
 
@@ -186,23 +145,6 @@ export default function LoginPage() {
                     </div>
                   ) : (
                     "Iniciar Sesión"
-                  )}
-                </Button>
-
-                {/* Botón de prueba para debug */}
-                <Button
-                  type="button"
-                  onClick={handleTestLogin}
-                  disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 mt-2"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Probando login...
-                    </div>
-                  ) : (
-                    "🔧 Probar Login (Debug)"
                   )}
                 </Button>
               </form>
