@@ -18,8 +18,6 @@ import {
 import { Button } from '../../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { ProgressBar } from '../../ui/ProgressBar';
-import { useApp } from '../../../hooks/useApp';
-
 interface User {
   id: string;
   name: string;
@@ -34,11 +32,9 @@ interface HomeViewProps {
 }
 
 export function HomeView({ user, onNavigateToCareer, onLogout }: HomeViewProps) {
-  // Usar el hook optimizado para obtener datos del store
-  const { overallProgress, activeCourse, showSuccess } = useApp();
-  
-  const progress = overallProgress || 25.5;
-  const totalModules = activeCourse?.modules?.length || 6;
+  // Datos estáticos por ahora para evitar dependencias complejas
+  const progress = 25.5;
+  const totalModules = 6;
   const completedModules = Math.floor((progress / 100) * totalModules);
 
   return (

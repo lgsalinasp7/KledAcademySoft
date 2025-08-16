@@ -5,8 +5,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { useApp } from '@/hooks/useApp';
-import { useProgressOptimized } from '@/hooks/useProgressOptimized';
+import { useAuthStore } from '@/stores/authStore';
 import { 
   Users, 
   BookOpen, 
@@ -19,34 +18,31 @@ import {
 } from 'lucide-react';
 
 export function StoreDemo() {
-  const { 
-    currentUser, 
-    isAdmin, 
-    isTeacher, 
-    isStudent,
-    currentView,
-    overallProgress,
-    isLoading,
-    hasError,
-    errorMessage,
-    showSuccess,
-    showError,
-    showWarning,
-    showInfo,
-    goToHome,
-    goToContent,
-    goToAdmin,
-    toggleTheme
-  } = useApp();
-
-  const {
-    progress,
-    getCurrentModuleProgress,
-    getCompletedLessonsCount,
-    getTotalLessonsCount,
-    isCurrentLessonCompleted,
-    completeCurrentLesson
-  } = useProgressOptimized();
+  const { user } = useAuthStore();
+  
+  // Datos estáticos para la demo
+  const currentUser = user;
+  const currentView = 'demo';
+  const isLoading = false;
+  const hasError = false;
+  const errorMessage = '';
+  const overallProgress = 25.5;
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+  const isTeacher = user?.role === 'TEACHER';
+  const isStudent = user?.role === 'STUDENT';
+  
+  // Funciones mock para la demo
+  const showSuccess = (message: string) => console.log('Success:', message);
+  const showError = (message: string) => console.log('Error:', message);
+  const showWarning = (message: string) => console.log('Warning:', message);
+  const showInfo = (message: string) => console.log('Info:', message);
+  const goToHome = () => console.log('Go to home');
+  const goToContent = () => console.log('Go to content');
+  const goToAdmin = () => console.log('Go to admin');
+  const toggleTheme = () => console.log('Toggle theme');
+  
+  const getCompletedLessonsCount = () => 12;
+  const getTotalLessonsCount = () => 48;
 
   const handleTestNotifications = () => {
     showSuccess('¡Operación exitosa!');

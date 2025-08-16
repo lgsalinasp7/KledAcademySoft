@@ -1,14 +1,14 @@
 "use client";
 
-import { useApp } from "@/hooks/useApp";
+import { useAuthStore } from "@/stores/authStore";
 import { CoursesManagement } from "@/components/features/admin/CoursesManagement";
 
 export default function AdminCoursesPage() {
-  const { currentUser, showSuccess, showError } = useApp();
+  const { user } = useAuthStore();
 
   return (
     <CoursesManagement 
-      user={currentUser! as any}
+      user={user! as any}
     />
   );
 }

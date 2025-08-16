@@ -25,11 +25,11 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const success = await signIn(email, password);
-      if (success) {
+      const result = await signIn(email, password);
+      if (result.success) {
         router.push("/dashboard");
       } else {
-        setError("Credenciales inválidas");
+        setError(result.error || "Credenciales inválidas");
       }
     } catch (err) {
       setError("Error al iniciar sesión");

@@ -26,12 +26,6 @@ interface UIState {
   addNotification: (notification: Omit<UIState['notifications'][0], 'id'>) => void;
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
-  
-  // Selectores computados
-  isAnyLoading: boolean;
-  hasNotifications: boolean;
-  successNotifications: UIState['notifications'];
-  errorNotifications: UIState['notifications'];
 }
 
 export const useUIStore = create<UIState>()(
@@ -105,27 +99,6 @@ export const useUIStore = create<UIState>()(
 
         clearNotifications: () => {
           set({ notifications: [] });
-        },
-
-        // Selectores computados
-        get isAnyLoading() {
-          const { loadingStates } = get();
-          return Object.values(loadingStates).some(loading => loading);
-        },
-
-        get hasNotifications() {
-          const { notifications } = get();
-          return notifications.length > 0;
-        },
-
-        get successNotifications() {
-          const { notifications } = get();
-          return notifications.filter(n => n.type === 'success');
-        },
-
-        get errorNotifications() {
-          const { notifications } = get();
-          return notifications.filter(n => n.type === 'error');
         }
       }),
       {
@@ -158,14 +131,14 @@ export const useTheme = () => useUIStore(state => ({
 export const useLoadingStates = () => useUIStore(state => ({
   loadingStates: state.loadingStates,
   setLoading: state.setLoading,
-  isAnyLoading: state.isAnyLoading
+  isAnyLoading: Object.values(state.loadingStates).some(loading => loading)
 }));
 
 export const useNotifications = () => useUIStore(state => ({
   notifications: state.notifications,
-  hasNotifications: state.hasNotifications,
-  successNotifications: state.successNotifications,
-  errorNotifications: state.errorNotifications,
+  hasNotifications: state.notifications.length > 0,
+  successNotifications: state.notifications.filter(n => n.type === 'success'),
+  errorNotifications: state.notifications.filter(n => n.type === 'error'),
   addNotification: state.addNotification,
   removeNotification: state.removeNotification,
   clearNotifications: state.clearNotifications
