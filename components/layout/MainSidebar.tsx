@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Home, Building, Square, BookOpen, Users, Users2, Settings, Shield, BarChart3, Calendar, UserCheck } from 'lucide-react';
 import { Logo } from '../ui/Logo';
-import { useApp } from '../../hooks/useApp';
-
 interface NavigationProps {
   userRole?: string;
 }
@@ -15,7 +13,10 @@ interface NavigationProps {
 export function MainSidebar({ userRole }: NavigationProps) {
   const pathname = usePathname();
   const currentView = pathname.split('/').pop() || 'home';
-  const { isAdmin, isTeacher, showInfo } = useApp();
+  
+  // Determinar el rol del usuario
+  const isAdmin = userRole && ['ADMIN', 'SUPER_ADMIN'].includes(userRole);
+  const isTeacher = userRole === 'TEACHER';
 
   const studentNavigationItems = [
     {
