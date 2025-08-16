@@ -175,6 +175,23 @@ export default function LoginPage() {
                     "Iniciar Sesión"
                   )}
                 </Button>
+
+                {/* Botón de prueba para debug */}
+                <Button
+                  type="button"
+                  onClick={handleTestLogin}
+                  disabled={isLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 mt-2"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Probando login...
+                    </div>
+                  ) : (
+                    "🔧 Probar Login (Debug)"
+                  )}
+                </Button>
               </form>
 
               {/* WhatsApp Support */}

@@ -48,8 +48,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   subscribeWithSelector(
     devtools(
-      persist(
-        (set, get) => ({
+      (set, get) => ({
           user: null,
           isAuthenticated: false,
           isLoading: false,
