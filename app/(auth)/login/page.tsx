@@ -21,17 +21,45 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with:', { email, password });
     setIsLoading(true);
     setError("");
 
     try {
+      console.log('Calling signIn...');
       const result = await signIn(email, password);
+      console.log('SignIn result:', result);
       if (result.success) {
+        console.log('Login successful, redirecting...');
         router.push("/dashboard");
       } else {
         setError(result.error || "Credenciales inválidas");
       }
     } catch (err) {
+      console.error('Login error:', err);
+      setError("Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTestLogin = async () => {
+    console.log('Test login clicked');
+    setIsLoading(true);
+    setError("");
+
+    try {
+      console.log('Calling signIn with test credentials...');
+      const result = await signIn('student@gmail.com', '123456');
+      console.log('Test login result:', result);
+      if (result.success) {
+        console.log('Test login successful, redirecting...');
+        router.push("/dashboard");
+      } else {
+        setError(result.error || "Credenciales inválidas");
+      }
+    } catch (err) {
+      console.error('Test login error:', err);
       setError("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
