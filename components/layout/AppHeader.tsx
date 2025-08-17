@@ -1,82 +1,61 @@
 "use client";
 
 import React from 'react';
-import { ChevronLeft, LogOut, User } from 'lucide-react';
-import { Button } from '../ui/button';
+import { ChevronLeft } from 'lucide-react';
+import { UserDropdown } from '../ui/UserDropdown';
+import { useAuthStore } from '@/stores/authStore';
 
 interface AppHeaderProps {
   title?: string;
   showBackButton?: boolean;
   onBack?: () => void;
-  user: any;
-  onLogout: () => void;
-  showUserDropdown?: boolean;
-  onToggleUserDropdown?: () => void;
   showUserProfile?: boolean;
 }
 
 export function AppHeader({ 
   title, 
-  showBackButton = false, 
+  showBackButton, 
   onBack, 
-  user, 
-  onLogout,
-  showUserDropdown = false,
-  onToggleUserDropdown,
   showUserProfile = true
 }: AppHeaderProps) {
+  const { user, signOut } = useAuthStore();
+  const [showUserDropdown, setShowUserDropdown] = React.useState(false);
+
+  if (!user) return null;
+
   return (
-    <header className="bg-gray-900 border-b border-gray-800 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          {showBackButton && onBack && (
-            <Button
+    <header className="bg-black border-b border-gray-800 px-6 py-4 flex items-center justify-between flex-shrink-0">
+      <div className="flex items-center gap-4">
+        {showBackButton && onBack && (
+          <>
+            <button 
               onClick={onBack}
-              variant="ghost"
-              size="sm"
-              className="text-gray-400 hover:text-white"
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
             >
               <ChevronLeft size={20} />
-            </Button>
-          )}
-          {title && (
-            <h1 className="text-xl font-semibold text-white">{title}</h1>
-          )}
-        </div>
-
-        {showUserProfile && (
-          <div className="relative">
-            <Button
-              onClick={onToggleUserDropdown}
-              variant="ghost"
-              className="flex items-center gap-2 text-white hover:bg-gray-800"
-            >
-              <User size={16} />
-              <span className="text-sm">{user?.name}</span>
-            </Button>
-
-            {showUserDropdown && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50">
-                <div className="p-3 border-b border-gray-700">
-                  <p className="text-sm text-white font-medium">{user?.name}</p>
-                  <p className="text-xs text-gray-400">{user?.email}</p>
-                </div>
-                <div className="p-1">
-                  <Button
-                    onClick={onLogout}
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                  >
-                    <LogOut size={16} className="mr-2" />
-                    Cerrar Sesión
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
+              <span className="text-sm font-medium">Volver</span>
+            </button>
+            <div className="w-px h-6 bg-gray-700"></div>
+          </>
+        )}
+        {title && (
+          <h1 className="text-xl font-semibold text-white">{title}</h1>
         )}
       </div>
+
+      {showUserProfile && (
+        <UserDropdown 
+          user={{
+            ...user,
+            initials: user.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+            isActive: true,
+            createdAt: new Date().toISOString()
+          }}
+          onLogout={signOut}
+          showDropdown={showUserDropdown}
+          onToggleDropdown={() => setShowUserDropdown(!showUserDropdown)}
+        />
+      )}
     </header>
   );
 }

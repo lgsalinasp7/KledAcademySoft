@@ -31,7 +31,7 @@ export function UserDropdown({ user, onLogout, showDropdown, onToggleDropdown }:
         className="flex items-center gap-3 bg-gray-900 hover:bg-gray-800 rounded-xl px-4 py-2 transition-colors"
       >
         <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-sm font-semibold text-black">
-          {user.initials}
+          {user.initials || user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
         </div>
         <span className="text-sm font-medium text-white hidden sm:block">{user.name}</span>
         <ChevronDown size={16} className="text-gray-400" />

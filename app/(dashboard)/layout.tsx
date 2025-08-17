@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import { MainSidebar } from "@/components/layout/MainSidebar";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { Notifications } from "@/components/ui/Notifications";
 
 interface DashboardLayoutProps {
@@ -68,6 +69,7 @@ export default function DashboardLayout({ children, params }: DashboardLayoutPro
 
         {/* Contenido principal */}
         <div className="flex-1 flex flex-col min-w-0">
+          <AppHeader />
           <main className="flex-1 bg-black min-h-0 overflow-y-auto">
             {children}
           </main>
