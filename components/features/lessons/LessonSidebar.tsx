@@ -2,13 +2,8 @@
 
 import React from 'react';
 import { ChevronDown, CheckCircle } from 'lucide-react';
-import { ProgressBar } from '../../ui/ProgressBar';
-
-interface LessonMenuItem {
-  id: string;
-  title: string;
-  completed: boolean;
-}
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { LessonMenuItem } from '@/types';
 
 interface LessonSidebarProps {
   lessonCode: string;
@@ -54,8 +49,12 @@ export function LessonSidebar({
           {lessonCode} | Intro & Herramientas
         </h2>
         <div className="mb-4">
-                          <ProgressBar percentage={100} />
-          <span className="text-xs text-yellow-400 font-medium">100% COMPLETA</span>
+          <ProgressBar 
+            percentage={100} 
+            label="100% COMPLETA"
+            color="yellow"
+            height="sm"
+          />
         </div>
       </div>
 

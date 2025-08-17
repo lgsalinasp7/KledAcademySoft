@@ -3,17 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, BookOpen, Clock, Calendar, CheckCircle, Circle } from 'lucide-react';
-
-interface Module {
-  id: string;
-  title: string;
-  lectures: number;
-  duration: string;
-  nextCheckpoint: string;
-  completed: boolean;
-  expanded: boolean;
-  lessons: any[];
-}
+import { Module } from '@/types';
 
 interface ModuleCardProps {
   module: Module;

@@ -1,161 +1,94 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { BookOpen, Clock, CheckCircle } from 'lucide-react';
-import { ProgressBar } from '../../ui/ProgressBar';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown, ChevronRight, Play, CheckCircle, Circle } from 'lucide-react';
+import { mockModules } from '@/data/modules';
+import { ModuleCard } from './ModuleCard';
+import { ProgressSection } from './ProgressSection';
+import { Module } from '@/types';
 
 interface ModulesViewProps {
   onModuleClick: (moduleId: string) => void;
 }
 
 export function ModulesView({ onModuleClick }: ModulesViewProps) {
-  const modules = [
-    {
-      id: '0',
-      title: 'Módulo 0: Preparación',
-      description: 'Configuración del entorno y herramientas básicas',
-      duration: '2 semanas',
-      lessons: 8,
-      completedLessons: 2,
-      status: 'in-progress'
-    },
-    {
-      id: '1',
-      title: 'Módulo 1: Fundamentos de JavaScript',
-      description: 'Variables, funciones, objetos y arrays',
-      duration: '3 semanas',
-      lessons: 12,
-      completedLessons: 0,
-      status: 'locked'
-    },
-    {
-      id: '2',
-      title: 'Módulo 2: React Hooks',
-      description: 'useState, useEffect, useContext y custom hooks',
-      duration: '4 semanas',
-      lessons: 15,
-      completedLessons: 0,
-      status: 'locked'
-    },
-    {
-      id: '3',
-      title: 'Módulo 3: Backend con Node.js',
-      description: 'Express, MongoDB, APIs RESTful',
-      duration: '4 semanas',
-      lessons: 18,
-      completedLessons: 0,
-      status: 'locked'
-    }
-  ];
+  const [modules, setModules] = useState<Module[]>(mockModules);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-500';
-      case 'in-progress':
-        return 'bg-yellow-400';
-      case 'locked':
-        return 'bg-gray-600';
-      default:
-        return 'bg-gray-600';
+  const toggleModule = (moduleId: string) => {
+    setModules(prev => prev.map(module => 
+      module.id === moduleId 
+        ? { ...module, expanded: !module.expanded }
+        : module
+    ));
+  };
+
+  const handleModuleClick = (moduleId: string) => {
+    if (moduleId === 'module-0') {
+      onModuleClick(moduleId);
+    } else {
+      toggleModule(moduleId);
     }
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'Completado';
-      case 'in-progress':
-        return 'En progreso';
-      case 'locked':
-        return 'Bloqueado';
-      default:
-        return 'Bloqueado';
-    }
-  };
+  const completedModules = modules.filter(m => m.completed).length;
 
   return (
-    <div className="h-full overflow-y-auto">
-      <div className="p-6">
-        <div className="max-w-4xl">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Módulos del Curso</h1>
-            <p className="text-gray-400">Selecciona un módulo para comenzar a aprender</p>
-          </div>
+    <div className="p-6 overflow-y-auto">
+      <div className="max-w-4xl">
+        <ProgressSection 
+          completedModules={completedModules}
+          totalModules={modules.length}
+        />
 
-          {/* Modules Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {modules.map((module) => {
-              const progressPercentage = (module.completedLessons / module.lessons) * 100;
-              const isClickable = module.status !== 'locked';
-
-              return (
-                <motion.div
-                  key={module.id}
-                  onClick={() => isClickable && onModuleClick(module.id)}
-                  className={`bg-gray-900 rounded-2xl p-6 border border-gray-800 transition-all duration-200 ${
-                    isClickable 
-                      ? 'cursor-pointer hover:bg-gray-800 hover:border-gray-700' 
-                      : 'opacity-75'
-                  }`}
-                  whileHover={isClickable ? { scale: 1.02 } : {}}
-                  whileTap={isClickable ? { scale: 0.98 } : {}}
-                >
-                  {/* Module Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getStatusColor(module.status)}`}>
-                        <BookOpen size={20} className="text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">{module.title}</h3>
-                        <p className="text-sm text-gray-400">{module.description}</p>
-                      </div>
+        <div className="space-y-4">
+          {modules.map(module => (
+            <motion.div key={module.id} layout className="space-y-2">
+              <ModuleCard 
+                module={module}
+                onModuleClick={handleModuleClick}
+              />
+              
+              <AnimatePresence>
+                {module.expanded && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden ml-8"
+                  >
+                    <div className="p-4 space-y-2">
+                      {module.lessons.map(lesson => (
+                        <div key={lesson.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                            lesson.completed ? 'bg-green-500 text-white' : 'bg-gray-600 text-gray-400'
+                          }`}>
+                            {lesson.completed ? <CheckCircle size={12} /> : <Circle size={12} />}
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-sm text-white">{lesson.title}</span>
+                            {lesson.duration && (
+                              <span className="ml-2 text-xs text-gray-400">({lesson.duration})</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {lesson.type === 'lecture' && (
+                              <Play size={14} className="text-blue-400" />
+                            )}
+                            {lesson.type === 'checkpoint' && (
+                              <div className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-medium">
+                                Checkpoint
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      module.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                      module.status === 'in-progress' ? 'bg-yellow-400/20 text-yellow-400' :
-                      'bg-gray-600/20 text-gray-400'
-                    }`}>
-                      {getStatusText(module.status)}
-                    </div>
-                  </div>
-
-                  {/* Module Info */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <Clock size={14} />
-                        <span>{module.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <CheckCircle size={14} />
-                        <span>{module.completedLessons}/{module.lessons} lecciones</span>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <ProgressBar 
-                      percentage={progressPercentage}
-                      color="yellow"
-                      height="sm"
-                      showLabel={false}
-                    />
-
-                    {/* Progress Text */}
-                    <p className="text-xs text-gray-400">
-                      {module.completedLessons > 0 
-                        ? `${progressPercentage.toFixed(1)}% completado`
-                        : 'Aún no has comenzado este módulo'
-                      }
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

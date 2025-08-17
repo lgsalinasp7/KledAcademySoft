@@ -2,22 +2,11 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  BookOpen, 
-  Users, 
-  Clock, 
-  TrendingUp, 
-  Calendar,
-  ArrowRight,
-  ExternalLink,
-  Github,
-  CheckCircle,
-  Play,
-  Star
-} from 'lucide-react';
-import { Button } from '../../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { ChevronRight, Calendar, Github, ExternalLink } from 'lucide-react';
+import { useProgress } from '@/hooks/useProgress';
 import { ProgressBar } from '../../ui/ProgressBar';
+import { useRouter } from 'next/navigation';
+
 interface User {
   id: string;
   name: string;
@@ -31,341 +20,210 @@ interface HomeViewProps {
   onLogout: () => void;
 }
 
-export function HomeView({ user, onNavigateToCareer, onLogout }: HomeViewProps) {
-  // Datos estáticos por ahora para evitar dependencias complejas
-  const progress = 25.5;
-  const totalModules = 6;
-  const completedModules = Math.floor((progress / 100) * totalModules);
+export function HomeView({ user, onNavigateToCareer }: HomeViewProps) {
+  const router = useRouter();
+  const { overallProgress } = useProgress(
+    user?.id || '5', // Default to Laura's ID for demo
+    '1' // Course ID for Full Stack
+  );
+
+  const handleNavigateToCareer = () => {
+    router.push('/dashboard/content');
+  };
 
   return (
-    <div className="flex-1 bg-black p-6 overflow-y-auto">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <h1 className="text-4xl font-bold text-white mb-2">
-            ¡Hola, {user.name}!
-          </h1>
-          <p className="text-gray-400 text-lg">
-            Bienvenido a tu plataforma educativa de KaledAcademy
-          </p>
-        </motion.div>
+    <div className="flex flex-1 h-full">
+      {/* Main Content */}
+      <div className="flex-1 bg-black">
+        <div className="p-6">
+        <div className="max-w-5xl">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              ¡Hola, {user.name.split(' ')[0]} {user.name.split(' ')[1]}!
+            </h1>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-400">Activos</span>
+                <div className="w-8 h-[2px] bg-yellow-400"></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-400">Finalizados</span>
+                <div className="w-8 h-[2px] bg-gray-600"></div>
+              </div>
+            </div>
+          </div>
 
-        {/* Progress Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-8"
-        >
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <BookOpen className="mr-2 h-5 w-5 text-yellow-400" />
-                Tu Progreso
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Continúa tu camino hacia el éxito
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Progreso General</span>
-                  <span className="text-yellow-400 font-semibold">{progress}%</span>
+          {/* Career Progress */}
+          <motion.div 
+            className="bg-gray-900 rounded-2xl p-6 mb-8 border border-gray-800 cursor-pointer hover:bg-gray-800 transition-all duration-200"
+            onClick={handleNavigateToCareer}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">FS</span>
                 </div>
-                <ProgressBar percentage={progress} />
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="text-center p-3 bg-gray-800 rounded-lg">
-                    <div className="text-2xl font-bold text-green-400">{completedModules}</div>
-                    <div className="text-gray-400">Módulos Completados</div>
+                <div>
+                  <p className="text-sm text-blue-400 font-medium mb-1">Carrera</p>
+                  <h3 className="text-xl font-bold text-white mb-2">Full Stack 3.0</h3>
+                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                    <span>Completado: {overallProgress.toFixed(1)}%</span>
                   </div>
-                  <div className="text-center p-3 bg-gray-800 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-400">{totalModules - completedModules}</div>
-                    <div className="text-gray-400">Módulos Restantes</div>
-                  </div>
+                  <ProgressBar 
+                    percentage={overallProgress}
+                    color="yellow"
+                    height="sm"
+                    showLabel={false}
+                  />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              <ChevronRight size={24} className="text-gray-400" />
+            </div>
+          </motion.div>
 
-        {/* Quick Actions */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
-        >
-          <Card className="bg-gray-900 border-gray-700 hover:bg-gray-800 transition-colors cursor-pointer"
-                onClick={onNavigateToCareer}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Carrera Full Stack</CardTitle>
-              <BookOpen className="h-4 w-4 text-yellow-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">Full Stack 3.0</div>
-              <p className="text-xs text-gray-400">Continúa tu aprendizaje</p>
-              <div className="mt-2">
-                <span className="text-sm text-yellow-400">Completado: {progress}%</span>
-                <ProgressBar percentage={progress} />
+          {/* KaledAcademy Blog Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-2">KaledAcademy Blog</h2>
+                <p className="text-gray-400">Te presentamos las últimas noticias del mundo tech</p>
               </div>
-            </CardContent>
-          </Card>
+              <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <ExternalLink size={16} />
+                Ir al blog
+              </button>
+            </div>
 
-          <Card className="bg-gray-900 border-gray-700 hover:bg-gray-800 transition-colors">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Próxima Clase</CardTitle>
-              <Clock className="h-4 w-4 text-blue-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">Hoy 18:00</div>
-              <p className="text-xs text-gray-400">React Hooks Avanzados</p>
-              <Button size="sm" className="mt-2 bg-blue-600 hover:bg-blue-700 text-white">
-                <Play className="mr-1 h-3 w-3" />
-                Unirse
-              </Button>
-            </CardContent>
-          </Card>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Blog Article 1 */}
+              <motion.div 
+                className="bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-200"
+                whileHover={{ y: -4 }}
+              >
+                <div className="h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                  <div className="text-yellow-400 text-6xl font-bold">K</div>
+                </div>
+                <div className="p-4">
+                  <p className="text-xs text-blue-400 mb-2">Mundo KaledAcademy • 7 min. de lectura</p>
+                  <h3 className="text-white font-semibold text-sm leading-tight">
+                    Automatización no-code: la habilidad que cambiará tu trabajo en 2025
+                  </h3>
+                </div>
+              </motion.div>
 
-          <Card className="bg-gray-900 border-gray-700 hover:bg-gray-800 transition-colors">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">Repositorio</CardTitle>
-              <Github className="h-4 w-4 text-green-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">GitHub</div>
-              <p className="text-xs text-gray-400">Accede a tu código</p>
-              <Button size="sm" variant="outline" className="mt-2 border-green-600 text-green-400 hover:bg-green-600 hover:text-white">
-                <ExternalLink className="mr-1 h-3 w-3" />
-                Ver
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Blog Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mb-8"
-        >
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Star className="mr-2 h-5 w-5 text-yellow-400" />
-                KaledAcademy Blog
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Te presentamos las últimas noticias del mundo tech
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4 p-4 bg-gray-800 rounded-lg">
-                  <div className="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center">
-                    <span className="text-black font-bold text-sm">K</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 text-sm text-gray-400 mb-1">
-                      <span>Mundo KaledAcademy</span>
-                      <span>•</span>
-                      <span>7 min. de lectura</span>
-                    </div>
-                    <h3 className="text-white font-semibold mb-2">
-                      Automatización no-code: la habilidad que cambiará tu trabajo en 2025
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      Descubre cómo las herramientas no-code están revolucionando el desarrollo de software...
-                    </p>
+              {/* Blog Article 2 */}
+              <motion.div 
+                className="bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-200"
+                whileHover={{ y: -4 }}
+              >
+                <div className="h-48 bg-yellow-400 flex items-center justify-center">
+                  <div className="bg-black p-4 rounded-lg">
+                    <div className="w-12 h-8 bg-yellow-400"></div>
                   </div>
                 </div>
-
-                <div className="flex items-start space-x-4 p-4 bg-gray-800 rounded-lg">
-                  <div className="w-12 h-12 bg-blue-400 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">📊</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 text-sm text-gray-400 mb-1">
-                      <span>Mundo KaledAcademy</span>
-                      <span>•</span>
-                      <span>8 min. de lectura</span>
-                    </div>
-                    <h3 className="text-white font-semibold mb-2">
-                      Ciencia de datos: oportunidades laborales y salarios en 2025
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      Análisis completo del mercado laboral en ciencia de datos...
-                    </p>
-                  </div>
+                <div className="p-4">
+                  <p className="text-xs text-blue-400 mb-2">Mundo KaledAcademy • 8 min. de lectura</p>
+                  <h3 className="text-white font-semibold text-sm leading-tight">
+                    Ciencia de datos: oportunidades laborales y salarios en 2025
+                  </h3>
                 </div>
+              </motion.div>
 
-                <div className="flex items-start space-x-4 p-4 bg-gray-800 rounded-lg">
-                  <div className="w-12 h-12 bg-purple-400 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">📈</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 text-sm text-gray-400 mb-1">
-                      <span>Mundo KaledAcademy</span>
-                      <span>•</span>
-                      <span>6 min. de lectura</span>
-                    </div>
-                    <h3 className="text-white font-semibold mb-2">
-                      7 ejemplos de dashboards en Power BI que impulsarán tu negocio
-                    </h3>
-                    <p className="text-gray-400 text-sm">
-                      Casos de uso reales de dashboards empresariales...
-                    </p>
-                  </div>
+              {/* Blog Article 3 */}
+              <motion.div 
+                className="bg-gray-900 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all duration-200"
+                whileHover={{ y: -4 }}
+              >
+                <div className="h-48 bg-gradient-to-br from-blue-900 to-gray-900 flex items-center justify-center">
+                  <div className="text-blue-400 text-4xl">📊</div>
                 </div>
+                <div className="p-4">
+                  <p className="text-xs text-blue-400 mb-2">Mundo KaledAcademy • 6 min. de lectura</p>
+                  <h3 className="text-white font-semibold text-sm leading-tight">
+                    7 ejemplos de dashboards en Power BI que impulsarán tu negocio
+                  </h3>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
 
-                <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Ir al blog
-                </Button>
+      {/* Right Sidebar */}
+      <div className="w-80 bg-gray-900 border-l border-gray-800 p-6">
+        {/* Próximos espacios */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-white mb-4">Próximos espacios</h3>
+          <div className="space-y-4">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-2">Hands-on</h4>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Calendar size={14} />
+                <span>Jueves 09:00 → 11:00</span>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Upcoming Sessions */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-8"
-        >
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-blue-400" />
-                Próximos Espacios
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Tu agenda de esta semana
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                      <Play className="text-white h-4 w-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold">Hands-on</h4>
-                      <p className="text-gray-400 text-sm">Jueves 09:00 → 11:00</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="outline" className="border-green-600 text-green-400 hover:bg-green-600 hover:text-white">
-                    Unirse
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <BookOpen className="text-white h-4 w-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold">Lecture</h4>
-                      <p className="text-gray-400 text-sm">Jueves 11:00 → 13:00</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="outline" className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white">
-                    Unirse
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                      <Play className="text-white h-4 w-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold">Hands-on</h4>
-                      <p className="text-gray-400 text-sm">Viernes 09:00 → 11:00</p>
-                    </div>
-                  </div>
-                  <Button size="sm" variant="outline" className="border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white">
-                    Unirse
-                  </Button>
-                </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-2">Lecture</h4>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Calendar size={14} />
+                <span>Jueves 11:00 → 13:00</span>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-2">Hands-on</h4>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Calendar size={14} />
+                <span>Viernes 09:00 → 11:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* GitHub Repository */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="mb-8"
-        >
-          <Card className="bg-gray-900 border-gray-700">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Github className="h-8 w-8 text-green-400" />
-                  <div>
-                    <h3 className="text-white font-semibold">Repositorio de GitHub</h3>
-                    <p className="text-gray-400 text-sm">Accede aquí a tu repositorio de GitHub</p>
-                  </div>
-                </div>
-                <Button className="bg-green-600 hover:bg-green-700 text-white">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Acceder
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="mb-8">
+          <div className="bg-gray-800 rounded-lg p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Github size={20} className="text-white" />
+              <span className="text-white font-medium">Accede aquí a tu repositorio de GitHub</span>
+            </div>
+          </div>
+        </div>
 
-        {/* Evaluations */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <Card className="bg-gray-900 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <CheckCircle className="mr-2 h-5 w-5 text-yellow-400" />
-                Evaluaciones
-              </CardTitle>
-              <CardDescription className="text-gray-400">
-                Próximas entregas y checkpoints
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-gray-800 rounded-lg">
-                  <h4 className="text-white font-semibold mb-2">Proyecto Integrador</h4>
-                  <p className="text-gray-400 text-sm mb-3">
-                    Inicio: Miércoles 27/08 12:00 hs<br/>
-                    Fin: Jueves 28/08 12:00 hs
-                  </p>
-                  <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-black">
-                    Dar aviso de entrega
-                  </Button>
+        {/* Evaluaciones */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-4">Evaluaciones</h3>
+          <div className="space-y-4">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-2">Proyecto integrador</h4>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div className="flex justify-between">
+                  <span>Inicio: Miércoles 27/08</span>
+                  <span>12:00 hs</span>
                 </div>
-
-                <div className="p-4 bg-gray-800 rounded-lg">
-                  <h4 className="text-white font-semibold mb-2">Checkpoint Módulo 0</h4>
-                  <p className="text-gray-400 text-sm">
-                    Viernes 29/08 12:00 → 12:30 hs
-                  </p>
+                <div className="flex justify-between">
+                  <span>Fin: Jueves 28/08</span>
+                  <span>12:00 hs</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              <button className="w-full mt-3 bg-gray-700 hover:bg-gray-600 text-gray-300 py-2 rounded-lg text-sm transition-colors">
+                Dar aviso de entrega
+              </button>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-2">Checkpoint Módulo 0</h4>
+              <div className="space-y-1 text-sm text-gray-400">
+                <div className="flex justify-between">
+                  <span>Viernes 29/08</span>
+                  <span>12:00 → 12:30 hs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

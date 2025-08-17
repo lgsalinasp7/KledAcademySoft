@@ -24,7 +24,7 @@ export default function DashboardLayout({ children, params }: DashboardLayoutPro
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -49,7 +49,15 @@ export default function DashboardLayout({ children, params }: DashboardLayoutPro
   }
 
   if (!user || !isAuthenticated) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-center text-white">
+          <p className="text-red-400">No autenticado</p>
+          <p className="text-gray-400">Usuario: {user ? user.name : 'Ninguno'}</p>
+          <p className="text-gray-400">Autenticado: {isAuthenticated ? 'Sí' : 'No'}</p>
+        </div>
+      </div>
+    );
   }
 
   return (

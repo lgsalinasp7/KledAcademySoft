@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { ChevronLeft, Clock, CheckCircle, Circle } from 'lucide-react';
-import { ProgressBar } from '../../ui/ProgressBar';
-import { Button } from '../../ui/button';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { Button } from '@/components/ui/button';
+import { useProgress } from '@/hooks/useProgress';
+import { useAuthStore } from '@/stores/authStore';
 
 interface ModuleDetailViewProps {
   moduleId: string;
@@ -11,72 +13,51 @@ interface ModuleDetailViewProps {
   onBack: () => void;
 }
 
+// Datos mock para las lecciones del módulo 0
+const module0Lessons = [
+  {
+    id: 'FSM0L1',
+    title: 'Introducción al Curso',
+    code: 'M0L1',
+    duration: '15m',
+    type: 'lecture'
+  },
+  {
+    id: 'FSM0L2',
+    title: 'Configuración del Entorno',
+    code: 'M0L2',
+    duration: '25m',
+    type: 'lecture'
+  },
+  {
+    id: 'FSM0L3',
+    title: 'Primer Checkpoint',
+    code: 'M0L3',
+    duration: '30m',
+    type: 'checkpoint'
+  }
+];
+
 export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDetailViewProps) {
-  // Mock data for module 0
-  const lessons = [
-    {
-      id: 'FSM0L1',
-      title: 'Intro & Herramientas',
-      code: 'FSM0L1',
-      duration: '45 min',
-      isCompleted: true
-    },
-    {
-      id: 'FSM0L2',
-      title: 'Configuración del Entorno',
-      code: 'FSM0L2',
-      duration: '60 min',
-      isCompleted: true
-    },
-    {
-      id: 'FSM0L3',
-      title: 'Git y GitHub',
-      code: 'FSM0L3',
-      duration: '90 min',
-      isCompleted: false
-    },
-    {
-      id: 'FSM0L4',
-      title: 'HTML y CSS Básico',
-      code: 'FSM0L4',
-      duration: '120 min',
-      isCompleted: false
-    },
-    {
-      id: 'FSM0L5',
-      title: 'JavaScript Intro',
-      code: 'FSM0L5',
-      duration: '150 min',
-      isCompleted: false
-    },
-    {
-      id: 'FSM0L6',
-      title: 'DOM Manipulation',
-      code: 'FSM0L6',
-      duration: '180 min',
-      isCompleted: false
-    },
-    {
-      id: 'FSM0L7',
-      title: 'Eventos y Formularios',
-      code: 'FSM0L7',
-      duration: '120 min',
-      isCompleted: false
-    },
-    {
-      id: 'FSM0L8',
-      title: 'Proyecto Final Módulo 0',
-      code: 'FSM0L8',
-      duration: '240 min',
-      isCompleted: false
-    }
-  ];
+  const { user } = useAuthStore();
+  const { progress, updateLessonProgress, isLessonCompleted } = useProgress(
+    user?.id || '5', // Default to Laura's ID for demo
+    '1' // Course ID for Full Stack
+  );
+
+  const lessons = module0Lessons;
   
-  const completedLessons = lessons.filter(lesson => lesson.isCompleted).length;
+  // Calculate progress based on real data
+  const completedLessons = lessons.filter(lesson => 
+    isLessonCompleted(moduleId, lesson.id)
+  ).length;
+  
   const progressPercentage = (completedLessons / lessons.length) * 100;
 
   const handleLessonClick = (lessonId: string) => {
     if (lessonId === 'FSM0L1') {
+      // Mark lesson as completed when clicked
+      updateLessonProgress(moduleId, lessonId, true);
       onLessonClick('FSM0L1');
     }
   };
@@ -90,7 +71,7 @@ export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDeta
           <Button
             onClick={onBack}
             variant="ghost"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-gray-400 hover:text-white"
           >
             <ChevronLeft size={20} />
             Volver a módulos
@@ -120,6 +101,8 @@ export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDeta
         {/* Lessons List */}
         <div className="space-y-3">
           {lessons.map((lesson, index) => {
+            const isCompleted = isLessonCompleted(moduleId, lesson.id);
+            
             return (
               <div
                 key={lesson.id}
@@ -133,9 +116,9 @@ export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDeta
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      lesson.isCompleted ? 'bg-green-500 text-white' : 'bg-gray-700 text-gray-400'
+                      isCompleted ? 'bg-green-500 text-white' : 'bg-gray-700 text-gray-400'
                     }`}>
-                      {lesson.isCompleted ? <CheckCircle size={16} /> : <Circle size={16} />}
+                      {isCompleted ? <CheckCircle size={16} /> : <Circle size={16} />}
                     </div>
                     <div>
                       <h3 className="text-white font-medium">{lesson.title}</h3>
@@ -145,7 +128,7 @@ export function ModuleDetailView({ moduleId, onLessonClick, onBack }: ModuleDeta
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    {lesson.isCompleted && (
+                    {isCompleted && (
                       <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
                         Completado
                       </div>

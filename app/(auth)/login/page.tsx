@@ -19,19 +19,26 @@ export default function LoginPage() {
   const { signIn } = useAuthStore();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    console.log('🔍 handleSubmit called with email:', email, 'password:', password);
+    if (e) e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
+      console.log('🔍 Calling signIn...');
       const result = await signIn(email, password);
+      console.log('🔍 SignIn result:', result);
+      
       if (result.success) {
+        console.log('🔍 Login successful, redirecting to dashboard...');
         router.push("/dashboard");
       } else {
+        console.log('🔍 Login failed:', result.error);
         setError(result.error || "Credenciales inválidas");
       }
     } catch (err) {
+      console.error('🔍 Login error:', err);
       setError("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
@@ -133,10 +140,11 @@ export default function LoginPage() {
                   </motion.div>
                 )}
 
-                <Button
-                  type="submit"
+                <button
+                  type="button"
                   disabled={isLoading}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3"
+                  onClick={handleSubmit}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3 rounded-lg"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
@@ -146,7 +154,7 @@ export default function LoginPage() {
                   ) : (
                     "Iniciar Sesión"
                   )}
-                </Button>
+                </button>
               </form>
 
               {/* WhatsApp Support */}
@@ -186,17 +194,17 @@ export default function LoginPage() {
                     <span className="text-yellow-400 font-semibold">Estudiante:</span>
                     <span className="text-gray-300 ml-2">student@gmail.com</span>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      setEmail("student@gmail.com");
-                      setPassword("123456");
-                    }}
-                    className="text-blue-400 hover:text-blue-300"
-                  >
-                    Usar
-                  </Button>
+                                     <button
+                     type="button"
+                     onClick={() => {
+                       console.log('🔍 Setting student credentials');
+                       setEmail("student@gmail.com");
+                       setPassword("123456");
+                     }}
+                     className="text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer px-2 py-1 rounded"
+                   >
+                     Usar
+                   </button>
                 </div>
                 
                 <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
