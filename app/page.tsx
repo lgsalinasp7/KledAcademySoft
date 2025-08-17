@@ -62,12 +62,12 @@ export default function LandingPage() {
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Logo size="md" />
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#cursos" className="text-gray-300 hover:text-white transition-colors font-medium">Cursos</a>
-              <a href="#metodologia" className="text-gray-300 hover:text-white transition-colors font-medium">Metodología</a>
-              <a href="#testimonios" className="text-gray-300 hover:text-white transition-colors font-medium">Testimonios</a>
-              <a href="#contacto" className="text-gray-300 hover:text-white transition-colors font-medium">Contacto</a>
-            </div>
+                         <div className="hidden md:flex items-center space-x-8">
+               <a href="#cursos" className="text-gray-300 hover:text-white transition-colors font-medium">Cursos</a>
+               <a href="#metodologia" className="text-gray-300 hover:text-white transition-colors font-medium">Metodología</a>
+               <a href="#beneficios" className="text-gray-300 hover:text-white transition-colors font-medium">Beneficios</a>
+               <a href="#contacto" className="text-gray-300 hover:text-white transition-colors font-medium">Contacto</a>
+             </div>
                                                    <Button 
                 onClick={handleWhatsAppRedirect}
                 className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-xl flex items-center space-x-2 shadow-lg shadow-green-500/25"
@@ -481,192 +481,113 @@ export default function LandingPage() {
          </div>
        </section>
 
-       {/* Testimonios */}
-       <section id="testimonios" className="py-24 px-6 bg-gray-900">
-         <div className="container mx-auto">
-           <motion.div
-             initial={{ opacity: 0, y: 30 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8 }}
-             className="text-center mb-20"
-           >
-             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 text-yellow-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-               <Star size={16} />
-               <span>Historias de Éxito</span>
-             </div>
-             <h2 className="text-5xl font-bold mb-6">
-               <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                 Lo que Dicen
-               </span>
-               <span className="text-white"> Nuestros Graduados</span>
-             </h2>
-             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-               Descubre cómo KaledAcademy transformó las carreras de cientos de estudiantes en Córdoba
-             </p>
-           </motion.div>
+               {/* Próximos Testimonios */}
+        <section id="proximos-testimonios" className="py-24 px-6 bg-gray-900">
+          <div className="container mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-20"
+            >
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 text-yellow-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <Sparkles size={16} />
+                <span>Próximos Éxitos</span>
+              </div>
+              <h2 className="text-5xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                  Próximos
+                </span>
+                <span className="text-white"> Testimonios</span>
+              </h2>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Nuestros primeros estudiantes están en proceso de formación. 
+                ¡Pronto compartiremos sus historias de éxito!
+              </p>
+            </motion.div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-             {[
-               {
-                 name: 'María González',
-                 role: 'Frontend Developer',
-                 company: 'TechCorp Córdoba',
-                 avatar: '👩‍💻',
-                 rating: 5,
-                 testimonial: 'KaledAcademy cambió mi vida completamente. En 6 meses pasé de no saber programar a trabajar como desarrolladora frontend. La metodología híbrida es perfecta para personas que trabajan.',
-                 salary: '$2,800,000',
-                 timeToJob: '2 meses'
-               },
-               {
-                 name: 'Carlos Mendoza',
-                 role: 'Full Stack Developer',
-                 company: 'StartupCord',
-                 avatar: '👨‍💻',
-                 rating: 5,
-                 testimonial: 'La mejor inversión que hice en mi carrera. Los proyectos reales que desarrollamos me dieron la experiencia necesaria para conseguir mi primer trabajo como desarrollador.',
-                 salary: '$3,200,000',
-                 timeToJob: '1 mes'
-               },
-               {
-                 name: 'Ana Rodríguez',
-                 role: 'React Developer',
-                 company: 'Digital Solutions',
-                 avatar: '👩‍💼',
-                 rating: 5,
-                 testimonial: 'Increíble experiencia. Los profesores son excelentes y la comunidad de estudiantes es muy solidaria. Ahora trabajo en una empresa de tecnología en Córdoba.',
-                 salary: '$2,500,000',
-                 timeToJob: '3 meses'
-               },
-               {
-                 name: 'Luis Herrera',
-                 role: 'Backend Developer',
-                 company: 'Innovation Labs',
-                 avatar: '👨‍🔧',
-                 rating: 5,
-                 testimonial: 'De conductor de taxi a desarrollador backend. KaledAcademy me dio las herramientas y la confianza para cambiar mi carrera profesional completamente.',
-                 salary: '$3,500,000',
-                 timeToJob: '4 meses'
-               },
-               {
-                 name: 'Sofia Castro',
-                 role: 'UI/UX Developer',
-                 company: 'Creative Studio',
-                 avatar: '👩‍🎨',
-                 rating: 5,
-                 testimonial: 'La combinación de clases online y presenciales me permitió aprender a mi ritmo. Ahora diseño y desarrollo interfaces web para clientes internacionales.',
-                 salary: '$2,900,000',
-                 timeToJob: '2 meses'
-               },
-               {
-                 name: 'Diego Morales',
-                 role: 'Mobile Developer',
-                 company: 'AppFactory',
-                 avatar: '👨‍📱',
-                 rating: 5,
-                 testimonial: 'Excelente bootcamp. Aprendí tanto frontend como backend, y ahora desarrollo aplicaciones móviles. La metodología práctica es lo mejor.',
-                 salary: '$3,800,000',
-                 timeToJob: '1 mes'
-               }
-             ].map((testimonial, index) => (
-               <motion.div
-                 key={testimonial.name}
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                 className="group"
-               >
-                 <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/50 via-gray-800/30 to-slate-900/50 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/10">
-                   {/* Background Glow Effect */}
-                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                   
-                   <div className="relative p-8">
-                     {/* Rating */}
-                     <div className="flex items-center gap-1 mb-6">
-                       {[...Array(testimonial.rating)].map((_, i) => (
-                         <Star key={i} size={16} className="text-yellow-400 fill-current" />
-                       ))}
-                     </div>
+            {/* Call to Action Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-yellow-500/20 via-orange-600/30 to-red-500/20 border border-yellow-400/40 backdrop-blur-sm hover:border-yellow-300/60 transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/20">
+                {/* Background Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <div className="relative p-12 text-center">
+                  <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
+                    <Rocket className="text-white" size={40} />
+                  </div>
+                  
+                  <h3 className="text-3xl font-bold text-white mb-6">¡Sé el Primero!</h3>
+                  <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Únete a nuestra primera cohorte y conviértete en uno de nuestros primeros graduados exitosos. 
+                    Tu historia de éxito será la primera que inspire a futuros estudiantes.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                    {[
+                      { icon: Users, title: 'Primera Cohorte', description: 'Grupo exclusivo de estudiantes pioneros' },
+                      { icon: Award, title: 'Certificación', description: 'Diploma oficial de KaledAcademy' },
+                      { icon: Target, title: 'Empleo Garantizado', description: 'Apoyo en la búsqueda de trabajo' }
+                    ].map((item, index) => (
+                      <div key={index} className="text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-2xl flex items-center justify-center">
+                          <item.icon className="text-yellow-400" size={28} />
+                        </div>
+                        <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
+                        <p className="text-gray-400 text-sm">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <Button 
+                    onClick={() => setIsFormVisible(true)}
+                    className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black px-10 py-4 text-lg font-bold rounded-xl flex items-center justify-center space-x-3 shadow-lg shadow-yellow-500/25 transform hover:scale-105 transition-all duration-200 mx-auto"
+                  >
+                    <Rocket size={20} />
+                    <span>¡Inscríbete Ahora!</span>
+                    <ArrowRight size={20} />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
 
-                     {/* Testimonial Text */}
-                     <blockquote className="text-gray-300 leading-relaxed mb-6 text-lg italic">
-                       "{testimonial.testimonial}"
-                     </blockquote>
-
-                     {/* Author Info */}
-                     <div className="flex items-center space-x-4 mb-6">
-                       <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg">
-                         {testimonial.avatar}
-                       </div>
-                       <div>
-                         <h4 className="text-white font-bold text-lg">{testimonial.name}</h4>
-                         <p className="text-yellow-400 font-medium">{testimonial.role}</p>
-                         <p className="text-gray-400 text-sm">{testimonial.company}</p>
-                       </div>
-                     </div>
-
-                     {/* Results */}
-                     <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-700/50">
-                       <div className="text-center">
-                         <div className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                           {testimonial.salary}
-                         </div>
-                         <div className="text-gray-400 text-sm">Salario Mensual</div>
-                       </div>
-                       <div className="text-center">
-                         <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                           {testimonial.timeToJob}
-                         </div>
-                         <div className="text-gray-400 text-sm">Tiempo al Empleo</div>
-                       </div>
-                     </div>
-
-                     {/* Bottom accent */}
-                     <div className="mt-6 pt-4 border-t border-gray-700/30">
-                       <div className="flex items-center justify-between">
-                         <span className="text-yellow-200 font-semibold text-sm">Graduado Exitoso</span>
-                         <div className="w-8 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </motion.div>
-             ))}
-           </div>
-
-           {/* Stats Section */}
-           <motion.div
-             initial={{ opacity: 0, y: 30 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8, delay: 0.3 }}
-             className="mt-20 text-center"
-           >
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-               {[
-                 { number: '95%', label: 'Tasa de Empleo', icon: Target },
-                 { number: '2.3', label: 'Meses Promedio', icon: Clock },
-                 { number: '$3.2M', label: 'Salario Promedio', icon: DollarSign },
-                 { number: '500+', label: 'Graduados Exitosos', icon: Award }
-               ].map((stat, index) => (
-                 <motion.div
-                   key={stat.label}
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   whileInView={{ opacity: 1, scale: 1 }}
-                   transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                   className="text-center group"
-                 >
-                   <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                     <stat.icon className="text-yellow-400" size={28} />
-                   </div>
-                   <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent mb-2">
-                     {stat.number}
-                   </div>
-                   <div className="text-gray-400 font-medium text-sm">{stat.label}</div>
-                 </motion.div>
-               ))}
-             </div>
-           </motion.div>
-         </div>
-       </section>
+            {/* Trust Indicators */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-20 text-center"
+            >
+              <h3 className="text-2xl font-bold text-white mb-12">¿Por Qué Confiar en Nosotros?</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                {[
+                  { icon: Shield, title: 'Metodología Probada', description: 'Basada en las mejores prácticas del mercado' },
+                  { icon: GraduationCap, title: 'Instructores Expertos', description: 'Profesionales con años de experiencia' },
+                  { icon: Users, title: 'Comunidad Activa', description: 'Red de desarrolladores en Córdoba' }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                    className="text-center group"
+                  >
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                      <item.icon className="text-blue-400" size={28} />
+                    </div>
+                    <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
+                    <p className="text-gray-400 text-sm">{item.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
       {/* CTA Section */}
       <section className="py-24 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 relative overflow-hidden">
