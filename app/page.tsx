@@ -63,10 +63,11 @@ export default function LandingPage() {
           <div className="flex items-center justify-between">
             <Logo size="md" />
                          <div className="hidden md:flex items-center space-x-8">
-               <a href="#cursos" className="text-gray-300 hover:text-white transition-colors font-medium">Cursos</a>
+               <a href="#ia-herramientas" className="text-gray-300 hover:text-white transition-colors font-medium">IA & Herramientas</a>
                <a href="#metodologia" className="text-gray-300 hover:text-white transition-colors font-medium">Metodología</a>
+               <a href="#tecnologias" className="text-gray-300 hover:text-white transition-colors font-medium">Tecnologías</a>
                <a href="#beneficios" className="text-gray-300 hover:text-white transition-colors font-medium">Beneficios</a>
-               <a href="#contacto" className="text-gray-300 hover:text-white transition-colors font-medium">Contacto</a>
+               <a href="#footer" className="text-gray-300 hover:text-white transition-colors font-medium">Contacto</a>
              </div>
                                                    <Button 
                 onClick={handleWhatsAppRedirect}
@@ -224,8 +225,147 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* Metodología */}
-      <section id="metodologia" className="py-24 px-6">
+             {/* IA & Herramientas Modernas */}
+       <section id="ia-herramientas" className="py-24 px-6 bg-gradient-to-br from-slate-800/50 via-purple-900/20 to-blue-900/30">
+         <div className="container mx-auto">
+           <motion.div
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.8 }}
+             className="text-center mb-20"
+           >
+             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-purple-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
+               <Brain size={16} />
+               <span>Futuro del Desarrollo</span>
+             </div>
+             <h2 className="text-5xl font-bold mb-6">
+               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 bg-clip-text text-transparent">
+                 Domina las Herramientas
+               </span>
+               <span className="text-white"> de IA</span>
+             </h2>
+             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+               Prepárate para el futuro del desarrollo con las herramientas de IA más utilizadas en el mercado
+             </p>
+           </motion.div>
+
+                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {[
+                {
+                  name: 'GitHub Copilot',
+                  description: 'Asistente de IA para programación en tiempo real',
+                  logo: '/github-copilot-logo.svg',
+                  color: 'from-blue-500 to-purple-600',
+                  features: ['Autocompletado inteligente', 'Sugerencias de código', 'Documentación automática']
+                },
+                {
+                  name: 'Cursor AI',
+                  description: 'Editor de código potenciado por IA',
+                  logo: '/cursor-ai-logo.svg',
+                  color: 'from-green-500 to-emerald-600',
+                  features: ['Refactorización automática', 'Debugging asistido', 'Generación de tests']
+                },
+                {
+                  name: 'ChatGPT',
+                  description: 'Asistente conversacional para desarrollo',
+                  logo: '/chatgpt-logo.svg',
+                  color: 'from-yellow-500 to-orange-600',
+                  features: ['Resolución de problemas', 'Explicación de conceptos', 'Optimización de código']
+                },
+                {
+                  name: 'n8n',
+                  description: 'Automatización de flujos de trabajo',
+                  logo: '/n8n-logo.svg',
+                  color: 'from-purple-500 to-pink-600',
+                  features: ['Integración de APIs', 'Automatización de tareas', 'Workflows visuales']
+                },
+                {
+                  name: 'Cloud Code',
+                  description: 'Desarrollo en la nube con IA',
+                  logo: '/cloud-code-logo.svg',
+                  color: 'from-cyan-500 to-blue-600',
+                  features: ['Desarrollo remoto', 'Colaboración en tiempo real', 'Deployment automático']
+                },
+                {
+                  name: 'Claude',
+                  description: 'Asistente de IA avanzado para código',
+                  logo: '/claude-logo.svg',
+                  color: 'from-indigo-500 to-purple-600',
+                  features: ['Análisis de código', 'Mejores prácticas', 'Arquitectura de software']
+                }
+              ].map((tool, index) => (
+                <motion.div
+                  key={tool.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group"
+                >
+                  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/50 via-gray-800/30 to-slate-900/50 border border-purple-500/30 backdrop-blur-sm hover:border-purple-400/60 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20">
+                    {/* Background Glow Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div className="relative p-8">
+                      <div className="flex items-center space-x-4 mb-6">
+                        <div className={`w-16 h-16 bg-gradient-to-r ${tool.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                          <img src={tool.logo} alt={tool.name} className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-white mb-2">{tool.name}</h3>
+                          <p className="text-purple-200 text-sm">{tool.description}</p>
+                        </div>
+                      </div>
+                     
+                     <div className="space-y-3">
+                       {tool.features.map((feature, featureIndex) => (
+                         <div key={featureIndex} className="flex items-center space-x-3 group/feature">
+                           <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full group-hover/feature:scale-150 transition-transform duration-200"></div>
+                           <span className="text-gray-300 text-sm">{feature}</span>
+                         </div>
+                       ))}
+                     </div>
+                     
+                     {/* Bottom accent */}
+                     <div className="mt-6 pt-4 border-t border-purple-500/30">
+                       <div className="flex items-center justify-between">
+                         <span className="text-purple-200 font-semibold text-sm">Herramienta de IA</span>
+                         <div className="w-8 h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full"></div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </motion.div>
+             ))}
+           </div>
+
+           {/* Call to Action */}
+           <motion.div
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.8, delay: 0.4 }}
+             className="text-center mt-16"
+           >
+             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-purple-300 px-6 py-3 rounded-full text-lg font-medium mb-8">
+               <Sparkles size={20} />
+               <span>¡Prepárate para el Futuro!</span>
+             </div>
+             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+               No solo aprenderás a programar, sino que dominarás las herramientas que están revolucionando la industria del desarrollo
+             </p>
+             <Button 
+               onClick={() => setIsFormVisible(true)}
+               className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-10 py-4 text-lg font-bold rounded-xl flex items-center justify-center space-x-3 shadow-lg shadow-purple-500/25 transform hover:scale-105 transition-all duration-200 mx-auto"
+             >
+               <Rocket size={20} />
+               <span>¡Inscríbete y Domina la IA!</span>
+               <ArrowRight size={20} />
+             </Button>
+           </motion.div>
+         </div>
+       </section>
+
+       {/* Metodología */}
+       <section id="metodologia" className="py-24 px-6">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -348,8 +488,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Tecnologías */}
-      <section className="py-24 px-6 bg-gray-900">
+             {/* Tecnologías */}
+       <section id="tecnologias" className="py-24 px-6 bg-gray-900">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -400,8 +540,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-             {/* Beneficios */}
-       <section className="py-24 px-6">
+                           {/* Beneficios */}
+        <section id="beneficios" className="py-24 px-6">
          <div className="container mx-auto">
            <motion.div
              initial={{ opacity: 0, y: 30 }}
@@ -444,12 +584,12 @@ export default function LandingPage() {
                  description: 'Únete a una red de más de 500 desarrolladores en Córdoba. Networking real y oportunidades laborales.',
                  color: 'from-green-400 to-emerald-500'
                },
-               {
-                 icon: Shield,
-                 title: 'Garantía de Empleo',
-                 description: '95% de nuestros graduados consiguen empleo en los primeros 3 meses. Te ayudamos a encontrar trabajo.',
-                 color: 'from-purple-400 to-pink-500'
-               },
+                               {
+                  icon: Shield,
+                  title: 'Job Preparation',
+                  description: 'Entrenamiento con expertos para maximizar tus posibilidades en el ecosistema tech. Te preparamos para el mercado laboral.',
+                  color: 'from-purple-400 to-pink-500'
+                },
                {
                  icon: Clock,
                  title: 'Horarios Flexibles',
@@ -479,117 +619,9 @@ export default function LandingPage() {
              ))}
            </div>
          </div>
-       </section>
+               </section>
 
-               {/* Próximos Testimonios */}
-        <section id="proximos-testimonios" className="py-24 px-6 bg-gray-900">
-          <div className="container mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-20"
-            >
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 text-yellow-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Sparkles size={16} />
-                <span>Próximos Éxitos</span>
-              </div>
-              <h2 className="text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  Próximos
-                </span>
-                <span className="text-white"> Testimonios</span>
-              </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Nuestros primeros estudiantes están en proceso de formación. 
-                ¡Pronto compartiremos sus historias de éxito!
-              </p>
-            </motion.div>
-
-            {/* Call to Action Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-4xl mx-auto"
-            >
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-yellow-500/20 via-orange-600/30 to-red-500/20 border border-yellow-400/40 backdrop-blur-sm hover:border-yellow-300/60 transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/20">
-                {/* Background Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <div className="relative p-12 text-center">
-                  <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/30">
-                    <Rocket className="text-white" size={40} />
-                  </div>
-                  
-                  <h3 className="text-3xl font-bold text-white mb-6">¡Sé el Primero!</h3>
-                  <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                    Únete a nuestra primera cohorte y conviértete en uno de nuestros primeros graduados exitosos. 
-                    Tu historia de éxito será la primera que inspire a futuros estudiantes.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                    {[
-                      { icon: Users, title: 'Primera Cohorte', description: 'Grupo exclusivo de estudiantes pioneros' },
-                      { icon: Award, title: 'Certificación', description: 'Diploma oficial de KaledAcademy' },
-                      { icon: Target, title: 'Empleo Garantizado', description: 'Apoyo en la búsqueda de trabajo' }
-                    ].map((item, index) => (
-                      <div key={index} className="text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-2xl flex items-center justify-center">
-                          <item.icon className="text-yellow-400" size={28} />
-                        </div>
-                        <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
-                        <p className="text-gray-400 text-sm">{item.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <Button 
-                    onClick={() => setIsFormVisible(true)}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black px-10 py-4 text-lg font-bold rounded-xl flex items-center justify-center space-x-3 shadow-lg shadow-yellow-500/25 transform hover:scale-105 transition-all duration-200 mx-auto"
-                  >
-                    <Rocket size={20} />
-                    <span>¡Inscríbete Ahora!</span>
-                    <ArrowRight size={20} />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-20 text-center"
-            >
-              <h3 className="text-2xl font-bold text-white mb-12">¿Por Qué Confiar en Nosotros?</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                {[
-                  { icon: Shield, title: 'Metodología Probada', description: 'Basada en las mejores prácticas del mercado' },
-                  { icon: GraduationCap, title: 'Instructores Expertos', description: 'Profesionales con años de experiencia' },
-                  { icon: Users, title: 'Comunidad Activa', description: 'Red de desarrolladores en Córdoba' }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                    className="text-center group"
-                  >
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                      <item.icon className="text-blue-400" size={28} />
-                    </div>
-                    <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
-                    <p className="text-gray-400 text-sm">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-      {/* CTA Section */}
+       {/* CTA Section */}
       <section className="py-24 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 relative overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0">
@@ -635,8 +667,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 py-16 px-6 border-t border-blue-500/20">
+             {/* Footer */}
+       <footer id="footer" className="bg-gray-900 py-16 px-6 border-t border-blue-500/20">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
