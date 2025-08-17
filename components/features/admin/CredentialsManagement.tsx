@@ -13,86 +13,41 @@ import {
   Eye,
   EyeOff,
   Download,
-  Send
+  Send,
+  Plus
 } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Badge } from '../../ui/badge';
-
-interface Student {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  paymentStatus: 'pending' | 'completed' | 'failed';
-  credentialsGenerated: boolean;
-  username?: string;
-  password?: string;
-  createdAt: string;
-  paymentDate?: string;
-}
+import { useUsersStore, Student } from '@/stores/usersStore';
+import { CreateStudentModal } from './CreateStudentModal';
+import { PaymentNotesModal } from './PaymentNotesModal';
 
 interface CredentialsManagementProps {
   user: any;
 }
 
-// Mock data
-const mockStudents: Student[] = [
-  {
-    id: '1',
-    name: 'Carlos Mendoza',
-    email: 'carlos.mendoza@email.com',
-    phone: '+57 300 123 4567',
-    paymentStatus: 'completed',
-    credentialsGenerated: true,
-    username: 'carlos.mendoza',
-    password: 'Kaled2024!',
-    createdAt: '2024-01-15',
-    paymentDate: '2024-01-15'
-  },
-  {
-    id: '2',
-    name: 'Ana Rodríguez',
-    email: 'ana.rodriguez@email.com',
-    phone: '+57 300 987 6543',
-    paymentStatus: 'completed',
-    credentialsGenerated: false,
-    createdAt: '2024-01-16',
-    paymentDate: '2024-01-16'
-  },
-  {
-    id: '3',
-    name: 'Luis Pérez',
-    email: 'luis.perez@email.com',
-    phone: '+57 300 555 1234',
-    paymentStatus: 'pending',
-    credentialsGenerated: false,
-    createdAt: '2024-01-17'
-  }
-];
-
 export function CredentialsManagement({ user }: CredentialsManagementProps) {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const { 
+    students, 
+    generateCredentials, 
+    sendCredentials: sendCreds,
+    searchStudents,
+    updatePaymentStatus
+  } = useUsersStore();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [showPasswords, setShowPasswords] = useState<{[key: string]: boolean}>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [newPaymentStatus, setNewPaymentStatus] = useState<'pending' | 'completed' | 'failed'>('pending');
 
-  const filteredStudents = students.filter(student => 
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const generateCredentials = (student: Student) => {
-    const username = student.email.split('@')[0];
-    const password = `Kaled${Math.random().toString(36).substring(2, 8)}!`;
-    
-    setStudents(prev => prev.map(s => 
-      s.id === student.id 
-        ? { ...s, username, password, credentialsGenerated: true }
-        : s
-    ));
-  };
+  const filteredStudents = searchTerm 
+    ? searchStudents(searchTerm)
+    : students;
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -107,9 +62,29 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
     }));
   };
 
-  const sendCredentials = (student: Student) => {
-    // Aquí se implementaría el envío de credenciales por WhatsApp/Email
-    alert(`Credenciales enviadas a ${student.name} (${student.phone})`);
+  const handleGenerateCredentials = (student: Student) => {
+    generateCredentials(student.id);
+  };
+
+  const handleSendCredentials = (student: Student) => {
+    sendCreds(student.id, 'whatsapp');
+    // Aquí podrías usar un toast o notificación más elegante
+    console.log(`Credenciales enviadas a ${student.name} (${student.phone})`);
+  };
+
+  const handleUpdatePaymentStatus = (student: Student, newStatus: 'pending' | 'completed' | 'failed') => {
+    // SIEMPRE mostrar modal de Shadcn UI para cualquier cambio de estado
+    setSelectedStudent(student);
+    setNewPaymentStatus(newStatus);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentStatusConfirm = (notes: string) => {
+    if (selectedStudent) {
+      updatePaymentStatus(selectedStudent.id, newPaymentStatus, notes);
+      // El modal de Shadcn UI ya se cierra automáticamente
+      // No necesitamos alert() adicional
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -140,10 +115,21 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-white mb-2">Gestión de Credenciales</h1>
-          <p className="text-gray-400">
-            Genera y gestiona las credenciales de acceso para estudiantes que han completado el pago
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">Gestión de Credenciales</h1>
+              <p className="text-gray-400">
+                Genera y gestiona las credenciales de acceso para estudiantes que han completado el pago
+              </p>
+            </div>
+            <Button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-yellow-400 hover:bg-yellow-300 text-black"
+            >
+              <Plus size={16} className="mr-2" />
+              Crear Estudiante
+            </Button>
+          </div>
         </motion.div>
 
         {/* Stats */}
@@ -244,11 +230,29 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                       <div className="flex items-center gap-2">
                         <span>📅 Registro: {new Date(student.createdAt).toLocaleDateString()}</span>
                       </div>
-                      {student.paymentDate && (
-                        <div className="flex items-center gap-2">
-                          <span>💳 Pago: {new Date(student.paymentDate).toLocaleDateString()}</span>
-                        </div>
-                      )}
+                                             {student.paymentDate && (
+                         <div className="flex items-center gap-2">
+                           <span>💳 Pago: {new Date(student.paymentDate).toLocaleDateString()}</span>
+                         </div>
+                       )}
+                       {student.paymentNotes && (
+                         <div className="flex items-start gap-2 col-span-full">
+                           <span className="text-red-400">⚠️</span>
+                           <span className="text-red-300 text-sm italic">"{student.paymentNotes}"</span>
+                           <Button
+                             size="sm"
+                             variant="ghost"
+                             onClick={() => {
+                               setSelectedStudent(student);
+                               setNewPaymentStatus(student.paymentStatus);
+                               setShowPaymentModal(true);
+                             }}
+                             className="text-blue-400 hover:text-blue-300 ml-2"
+                           >
+                             Editar
+                           </Button>
+                         </div>
+                       )}
                     </div>
                   </div>
 
@@ -297,7 +301,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                         <div className="text-center">
                           <p className="text-gray-400 text-sm mb-2">Credenciales no generadas</p>
                           <Button
-                            onClick={() => generateCredentials(student)}
+                            onClick={() => handleGenerateCredentials(student)}
                             className="bg-blue-600 hover:bg-blue-700 text-white"
                             size="sm"
                           >
@@ -309,7 +313,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                       
                       <div className="flex gap-2">
                         <Button
-                          onClick={() => sendCredentials(student)}
+                          onClick={() => handleSendCredentials(student)}
                           className="bg-green-600 hover:bg-green-700 text-white"
                           size="sm"
                         >
@@ -332,12 +336,64 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                   {student.paymentStatus === 'pending' && (
                     <div className="text-center">
                       <p className="text-yellow-400 text-sm mb-2">Pendiente de pago</p>
+                      <div className="flex gap-2 justify-center">
+                        <Button
+                          onClick={() => handleUpdatePaymentStatus(student, 'completed')}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          size="sm"
+                        >
+                          <CheckCircle size={14} className="mr-2" />
+                          Marcar como Pagado
+                        </Button>
+                        <Button
+                          onClick={() => handleUpdatePaymentStatus(student, 'failed')}
+                          className="bg-red-600 hover:bg-red-700 text-white"
+                          size="sm"
+                        >
+                          <AlertCircle size={14} className="mr-2" />
+                          Marcar como Fallido
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Failed Payment */}
+                  {student.paymentStatus === 'failed' && (
+                    <div className="text-center">
+                      <p className="text-red-400 text-sm mb-2">Pago fallido</p>
+                      <div className="flex gap-2 justify-center">
+                        <Button
+                          onClick={() => handleUpdatePaymentStatus(student, 'completed')}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                          size="sm"
+                        >
+                          <CheckCircle size={14} className="mr-2" />
+                          Marcar como Pagado
+                        </Button>
+                        <Button
+                          onClick={() => handleUpdatePaymentStatus(student, 'pending')}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                          size="sm"
+                        >
+                          <AlertCircle size={14} className="mr-2" />
+                          Marcar como Pendiente
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Completed Payment - Option to revert */}
+                  {student.paymentStatus === 'completed' && (
+                    <div className="text-center">
+                      <p className="text-green-400 text-sm mb-2">Pago completado</p>
                       <Button
+                        onClick={() => handleUpdatePaymentStatus(student, 'pending')}
                         variant="outline"
-                        className="border-yellow-600 text-yellow-400 hover:bg-yellow-600 hover:text-white"
+                        className="border-gray-600 text-gray-400 hover:bg-gray-800"
                         size="sm"
                       >
-                        Recordar Pago
+                        <AlertCircle size={14} className="mr-2" />
+                        Revertir a Pendiente
                       </Button>
                     </div>
                   )}
@@ -360,6 +416,28 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
           </motion.div>
         )}
       </div>
+
+      {/* Create Student Modal */}
+      <CreateStudentModal 
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
+
+      {/* Payment Notes Modal */}
+      {selectedStudent && (
+        <PaymentNotesModal
+          isOpen={showPaymentModal}
+          onClose={() => {
+            setShowPaymentModal(false);
+            setSelectedStudent(null);
+          }}
+          onConfirm={handlePaymentStatusConfirm}
+          studentName={selectedStudent.name}
+          currentStatus={selectedStudent.paymentStatus}
+          newStatus={newPaymentStatus}
+          currentNotes={selectedStudent.paymentNotes}
+        />
+      )}
     </div>
   );
 }

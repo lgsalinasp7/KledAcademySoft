@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -14,10 +14,22 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
-  role      UserRole
+  role      String   // 'SUPER_ADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT'
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Campos de autenticación
+  username  String?  @unique
+  password  String?  // Hash de la contraseña
+  lastLogin DateTime?
+  
+  // Campos específicos para estudiantes
+  phone     String?
+  paymentStatus String? // 'PENDING' | 'COMPLETED' | 'FAILED'
+  paymentDate DateTime?
+  paymentNotes String?
+  credentialsGenerated Boolean @default(false)
   
   // Relaciones
   courses   Course[]
@@ -52,8 +64,8 @@ model Cohort {
   endDate        DateTime
   maxStudents    Int
   currentStudents Int      @default(0)
-  status         CohortStatus
-  schedule       Json
+  status         String   // 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
+  schedule       String   // JSON como string
   createdAt      DateTime @default(now())
   
   // Relaciones
@@ -105,18 +117,4 @@ model StudentProgress {
   lessonId  String
   
   @@unique([studentId, lessonId])
-}
-
-enum UserRole {
-  SUPER_ADMIN
-  ADMIN
-  TEACHER
-  STUDENT
-}
-
-enum CohortStatus {
-  DRAFT
-  ACTIVE
-  COMPLETED
-  CANCELLED
 }

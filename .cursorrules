@@ -188,16 +188,36 @@ const className = cn(
 );
 ```
 
-#### Componentes de Shadcn
+#### Componentes de Shadcn - REGLA OBLIGATORIA
 ```typescript
-// Usar componentes de Shadcn UI
+// ⚠️ REGLA CRÍTICA: SIEMPRE buscar primero en Shadcn UI antes de crear componentes
+// 1. Verificar si existe en: https://ui.shadcn.com/docs/components
+// 2. Si existe, instalarlo con: npx shadcn@latest add [component-name]
+// 3. Usar el componente de Shadcn en lugar de crear uno personalizado
+
+// Ejemplos de componentes disponibles:
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent } from '@/components/ui/alert-dialog';
 
 // Seguir las variantes de Shadcn
 <Button variant="default" size="sm">
   Acción
 </Button>
+```
+
+#### Proceso para Nuevos Componentes
+```typescript
+// 1. IDENTIFICAR necesidad de componente
+// 2. BUSCAR en Shadcn UI: https://ui.shadcn.com/docs/components
+// 3. Si existe: npx shadcn@latest add [component-name]
+// 4. Si NO existe: Crear componente personalizado siguiendo patrones de Shadcn
+// 5. NUNCA crear componentes que ya existen en Shadcn UI
 ```
 
 ### 7. Reglas para API Routes (Next.js)
@@ -336,11 +356,12 @@ NEXTAUTH_URL=
 
 1. **Siempre usar TypeScript** - No usar `any` sin justificación
 2. **Seguir las convenciones de nomenclatura** - Mantener consistencia
-3. **Usar componentes de Shadcn UI** - No crear componentes desde cero si ya existen
-4. **Manejar estado con Zustand** - No usar Context API para estado global
-5. **Validar datos con Zod** - Especialmente en formularios y APIs
-6. **Manejar errores apropiadamente** - Siempre usar try-catch
-7. **Optimizar para performance** - Usar las optimizaciones de Next.js
-8. **Mantener accesibilidad** - Seguir estándares WCAG
-9. **Documentar código complejo** - Comentarios claros y concisos
-10. **Testear funcionalidad crítica** - Implementar tests cuando sea necesario
+3. **⚠️ REGLA CRÍTICA: SIEMPRE buscar en Shadcn UI primero** - Antes de crear cualquier componente, verificar si existe en https://ui.shadcn.com/docs/components
+4. **Usar componentes de Shadcn UI** - No crear componentes desde cero si ya existen
+5. **Manejar estado con Zustand** - No usar Context API para estado global
+6. **Validar datos con Zod** - Especialmente en formularios y APIs
+7. **Manejar errores apropiadamente** - Siempre usar try-catch
+8. **Optimizar para performance** - Usar las optimizaciones de Next.js
+9. **Mantener accesibilidad** - Seguir estándares WCAG
+10. **Documentar código complejo** - Comentarios claros y concisos
+11. **Testear funcionalidad crítica** - Implementar tests cuando sea necesario
