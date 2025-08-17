@@ -1,9 +1,12 @@
 {
-  "/not-found": "app/not-found.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
   "/page": "app/page.js",
-  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
-  "/(dashboard)/dashboard/content/page": "app/(dashboard)/dashboard/content/page.js",
-  "/(dashboard)/dashboard/home/page": "app/(dashboard)/dashboard/home/page.js",
-  "/(dashboard)/dashboard/admin-courses/page": "app/(dashboard)/dashboard/admin-courses/page.js"
+  "/(dashboard)/dashboard/admin-roles/page": "app/(dashboard)/dashboard/admin-roles/page.js",
+  "/(dashboard)/dashboard/admin-settings/page": "app/(dashboard)/dashboard/admin-settings/page.js",
+  "/(dashboard)/dashboard/admin-users/page": "app/(dashboard)/dashboard/admin-users/page.js",
+  "/(dashboard)/dashboard/admin-analytics/page": "app/(dashboard)/dashboard/admin-analytics/page.js",
+  "/(dashboard)/dashboard/admin-calendar/page": "app/(dashboard)/dashboard/admin-calendar/page.js",
+  "/(dashboard)/dashboard/admin-courses/page": "app/(dashboard)/dashboard/admin-courses/page.js",
+  "/(dashboard)/dashboard/admin-cohorts/page": "app/(dashboard)/dashboard/admin-cohorts/page.js",
+  "/(dashboard)/dashboard/admin-credentials/page": "app/(dashboard)/dashboard/admin-credentials/page.js",
+  "/(dashboard)/dashboard/home/page": "app/(dashboard)/dashboard/home/page.js"
 }
