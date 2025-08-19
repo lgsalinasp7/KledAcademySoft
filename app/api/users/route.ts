@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED';
 
 // Esquema de validación para crear usuario
 const createUserSchema = z.object({
@@ -48,7 +49,10 @@ export async function POST(request: NextRequest) {
           ...validatedData,
           username,
           password: hashedPassword,
-          credentialsGenerated: true
+          credentialsGenerated: true,
+          phone: validatedData.phone || null,
+          paymentStatus: validatedData.paymentStatus ? (validatedData.paymentStatus as PaymentStatus) : null,
+          paymentNotes: validatedData.paymentNotes || null,
         }
       });
       
@@ -65,7 +69,10 @@ export async function POST(request: NextRequest) {
       const user = await prisma.user.create({
         data: {
           ...validatedData,
-          credentialsGenerated: false
+          credentialsGenerated: false,
+          phone: validatedData.phone || null,
+          paymentStatus: validatedData.paymentStatus ? (validatedData.paymentStatus as PaymentStatus) : null,
+          paymentNotes: validatedData.paymentNotes || null,
         }
       });
       

@@ -56,7 +56,7 @@ interface MainStoreState {
 export const useMainStore = create<MainStoreState>()(
   subscribeWithSelector(
     devtools(
-      (set, get) => ({
+      (_, get) => ({
         // Acciones principales
         initializeApp: async () => {
           const authStore = useAuthStore.getState();
@@ -205,7 +205,7 @@ export const useMainStore = create<MainStoreState>()(
           return authStore.isLoading || 
                  dataStore.loading || 
                  progressStore.loading || 
-                 uiStore.isAnyLoading;
+                                   false; // uiStore.isAnyLoading removed
         },
 
         get hasError() {
@@ -228,7 +228,7 @@ export const useMainStore = create<MainStoreState>()(
 
         get activeCourse() {
           const dataStore = useDataStore.getState();
-          const navigationStore = useNavigationStore.getState();
+          // const navigationStore = useNavigationStore.getState();
           
           // Lógica para determinar el curso activo basado en la navegación
           // Por ahora retornamos el primer curso
@@ -282,7 +282,7 @@ export const useAppActions = () => useMainStore(state => ({
   resetAllStores: state.resetAllStores,
   signIn: state.signIn,
   signOut: state.signOut,
-  signUp: state.signUp,
+  // signUp: state.signUp, // No implementado en authStore
   navigateTo: state.navigateTo,
   navigateToModule: state.navigateToModule,
   navigateToLesson: state.navigateToLesson,

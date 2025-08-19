@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent } from '../../ui/card';
 import { Badge } from '../../ui/badge';
 import { useUsersStore, Student } from '@/stores/usersStore';
 import { CreateStudentModal } from './CreateStudentModal';
@@ -168,7 +168,7 @@ export function CredentialsManagement({ }: CredentialsManagementProps) {
           <Card className="bg-gray-900 border-gray-700">
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-blue-400 mb-2">
-                {students.filter(s => s.paymentStatus === 'pending').length}
+                {students.filter(s => s.paymentStatus === 'PENDING').length}
               </div>
               <p className="text-gray-400 text-sm">Pendientes de Pago</p>
             </CardContent>

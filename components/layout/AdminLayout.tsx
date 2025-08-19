@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { AdminSidebar } from './AdminSidebar';
 import { AppHeader } from './AppHeader';
-import { UserDropdown } from '../ui/UserDropdown';
+
 
 // Admin Views
 import { AdminDashboardView } from '../features/admin/AdminDashboardView';
@@ -50,16 +50,16 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
         return <AdminDashboardView user={user} onNavigateToSection={setCurrentView} onLogout={onLogout} />;
       
       case 'admin-courses':
-        return <CoursesManagement user={user as any} />;
+        return <CoursesManagement />;
       
       case 'admin-cohorts':
-        return <CohortsManagement user={user as any} />;
+        return <CohortsManagement />;
       
       case 'admin-users':
         return <UsersManagement user={user as any} />;
       
       case 'admin-credentials':
-        return <CredentialsManagement user={user as any} />;
+        return <CredentialsManagement />;
       
       default:
         return (
@@ -87,7 +87,6 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
         {/* Header */}
         <AppHeader
           title={getPageTitle()}
-          user={user}
           onLogout={onLogout}
           showUserDropdown={showUserDropdown}
           onToggleUserDropdown={() => setShowUserDropdown(!showUserDropdown)}

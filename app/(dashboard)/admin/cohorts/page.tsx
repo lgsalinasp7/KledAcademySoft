@@ -38,7 +38,7 @@ export default function AdminCohortsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CohortsManagement user={user} />
+      <CohortsManagement />
     </div>
   );
 }

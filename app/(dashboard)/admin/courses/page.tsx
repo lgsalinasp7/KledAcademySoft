@@ -38,7 +38,7 @@ export default function AdminCoursesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CoursesManagement user={user} />
+      <CoursesManagement />
     </div>
   );
 }

@@ -42,7 +42,9 @@ export function CreateStudentModal({ isOpen, onClose }: CreateStudentModalProps)
 
     try {
       addStudent({
-        ...formData
+        ...formData,
+        isActive: true,
+        role: 'student'
       });
       
       // Reset form

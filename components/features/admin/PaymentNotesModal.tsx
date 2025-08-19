@@ -17,8 +17,8 @@ interface PaymentNotesModalProps {
   onClose: () => void;
   onConfirm: (notes: string) => void;
   studentName: string;
-  currentStatus: 'pending' | 'completed' | 'failed';
-  newStatus: 'pending' | 'completed' | 'failed';
+  currentStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
+  newStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
   currentNotes?: string;
 }
 
@@ -58,18 +58,18 @@ export function PaymentNotesModal({
 
   const getStatusText = () => {
     switch (newStatus) {
-      case 'completed': return 'Pagado';
-      case 'pending': return 'Pendiente';
-      case 'failed': return 'Fallido';
+      case 'COMPLETED': return 'Pagado';
+      case 'PENDING': return 'Pendiente';
+      case 'FAILED': return 'Fallido';
       default: return newStatus;
     }
   };
 
   const getStatusColor = () => {
     switch (newStatus) {
-      case 'completed': return 'text-green-400';
-      case 'pending': return 'text-yellow-400';
-      case 'failed': return 'text-red-400';
+      case 'COMPLETED': return 'text-green-400';
+      case 'PENDING': return 'text-yellow-400';
+      case 'FAILED': return 'text-red-400';
       default: return 'text-gray-400';
     }
   };
@@ -90,7 +90,7 @@ export function PaymentNotesModal({
               </p>
               <p>
                 Estado actual: <span className="text-yellow-400">
-                  {currentStatus === 'completed' ? 'Pagado' : currentStatus === 'pending' ? 'Pendiente' : 'Fallido'}
+                  {currentStatus === 'COMPLETED' ? 'Pagado' : currentStatus === 'PENDING' ? 'Pendiente' : 'Fallido'}
                 </span>
               </p>
               <p>

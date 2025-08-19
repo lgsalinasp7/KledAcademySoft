@@ -7,15 +7,10 @@ import {
   Users, 
   Clock, 
   MapPin, 
-  Star, 
   ArrowRight, 
-  Phone,
   MessageCircle,
-  Calendar,
-  BookOpen,
   Code,
   Zap,
-  DollarSign,
   Shield,
   Award,
   Globe,
@@ -31,7 +26,7 @@ import {
   Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Logo } from '@/components/ui/Logo';
 import { getSupportConfig } from '@/lib/config';
 import { kaledAcademyBranding } from '@/lib/config/branding';

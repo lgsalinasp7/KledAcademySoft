@@ -9,15 +9,14 @@ import { Notifications } from "@/components/ui/Notifications";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  params: { slug?: string[] };
 }
 
-export default function DashboardLayout({ children, params }: DashboardLayoutProps) {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { 
     user, 
     isAuthenticated, 
     isLoading, 
-    signOut,
+    // signOut,
     checkAuth
   } = useAuthStore();
   
@@ -33,10 +32,7 @@ export default function DashboardLayout({ children, params }: DashboardLayoutPro
     }
   }, [isAuthenticated, isLoading, router]);
 
-  const handleLogout = () => {
-    signOut();
-    router.push("/login");
-  };
+
 
   if (isLoading) {
     return (

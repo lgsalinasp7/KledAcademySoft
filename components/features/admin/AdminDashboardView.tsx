@@ -7,12 +7,8 @@ import {
   Users, 
   Users2, 
   BarChart3, 
-  Settings, 
   Shield, 
   TrendingUp,
-  Plus,
-  Calendar,
-  Clock,
   DollarSign
 } from 'lucide-react';
 import { Button } from '../../ui/button';
@@ -31,7 +27,7 @@ interface AdminDashboardViewProps {
   onLogout: () => void;
 }
 
-export function AdminDashboardView({ user, onNavigateToSection, onLogout }: AdminDashboardViewProps) {
+export function AdminDashboardView({ user, onNavigateToSection }: AdminDashboardViewProps) {
   return (
     <div className="flex-1 bg-black p-6 overflow-y-auto">
       <div className="max-w-6xl mx-auto">

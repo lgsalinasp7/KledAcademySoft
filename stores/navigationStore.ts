@@ -79,7 +79,7 @@ export const useNavigationStore = create<NavigationState>()(
         },
 
         navigateBack: () => {
-          const { currentView, selectedModule } = get();
+          const { currentView } = get();
           
           if (currentView === 'lesson-content') {
             set({ 
