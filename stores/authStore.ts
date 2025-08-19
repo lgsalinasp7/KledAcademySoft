@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { devtools } from 'zustand/middleware';
 import { persist } from 'zustand/middleware';
+import { logger } from '@/lib/logger';
 
 export interface User {
   id: string;
@@ -36,8 +37,8 @@ interface AuthState {
 const mockUsers = [
   {
     id: '1',
-    email: 'admin@kaledacademy.com',
-    name: 'AD Administrador Demo',
+    email: 'admin@gmail.com',
+    name: 'Administrador',
     role: 'ADMIN' as const,
     username: 'admin',
     isActive: true,
@@ -45,17 +46,17 @@ const mockUsers = [
   },
   {
     id: '2',
-    email: 'profesor@kaledacademy.com',
-    name: 'Profesor Demo',
+    email: 'teacher@gmail.com',
+    name: 'Profesor',
     role: 'TEACHER' as const,
-    username: 'profesor',
+    username: 'teacher',
     isActive: true,
     createdAt: new Date().toISOString()
   },
   {
     id: '3',
-    email: 'estudiante@kaledacademy.com',
-    name: 'Estudiante Demo',
+    email: 'estudiante@gmail.com',
+    name: 'Estudiante',
     role: 'STUDENT' as const,
     username: 'estudiante',
     isActive: true,
@@ -84,8 +85,8 @@ export const useAuthStore = create<AuthState>()(
               
               // Primero intentar con usuarios mock para desarrollo
               const mockUser = mockUsers.find(u => 
-                (u.email === email || u.username === email) && 
-                (u.username === password || password === 'demo123')
+                u.email === email && 
+                (password === 'demo123' || password === 'admin123' || password === 'teacher123')
               );
               
               if (mockUser) {
@@ -124,14 +125,14 @@ export const useAuthStore = create<AuthState>()(
               
               return { success: true };
               
-            } catch (error) {
-              console.error('Error en signIn:', error);
-              set({ 
-                error: 'Error de conexión', 
-                isLoading: false 
-              });
-              return { success: false, error: 'Error de conexión' };
-            }
+                    } catch (error) {
+          logger.error('Error en signIn', { error });
+          set({
+            error: 'Error de conexión',
+            isLoading: false
+          });
+          return { success: false, error: 'Error de conexión' };
+        }
           },
           
           signOut: () => {

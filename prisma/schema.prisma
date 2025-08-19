@@ -3,118 +3,179 @@
 
 generator client {
   provider = "prisma-client-js"
+  // Configuración para evitar warnings en producción
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Configuración para connection pooling en Vercel
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
-  role      String   // 'SUPER_ADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT'
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // Campos de autenticación
   username  String?  @unique
-  password  String?  // Hash de la contraseña
-  lastLogin DateTime?
-  
-  // Campos específicos para estudiantes
+  password  String
+  role      UserRole @default(STUDENT)
   phone     String?
-  paymentStatus String? // 'PENDING' | 'COMPLETED' | 'FAILED'
-  paymentDate DateTime?
-  paymentNotes String?
-  credentialsGenerated Boolean @default(false)
+  isActive  Boolean  @default(true)
+  
+  // Campos de pago
+  paymentStatus      PaymentStatus? @default(PENDING)
+  paymentDate        DateTime?
+  paymentNotes       String?
+  credentialsGenerated Boolean      @default(false)
+  
+  // Timestamps
+  lastLogin  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   
   // Relaciones
-  courses   Course[]
-  cohorts   Cohort[]  @relation("CohortTeachers")
-  students  Cohort[]  @relation("CohortStudents")
-  progress  StudentProgress[]
+  enrollments Enrollment[]
+  
+  // Índices para optimización
+  @@index([email])
+  @@index([role])
+  @@index([paymentStatus])
+  @@index([isActive])
+  @@map("users")
 }
 
 model Course {
   id          String   @id @default(cuid())
   title       String
-  description String
-  category    String
-  duration    String
-  level       String
+  description String?
   price       Float
+  duration    Int      // en semanas
   isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   
   // Relaciones
+  enrollments Enrollment[]
   modules     Module[]
-  cohorts     Cohort[]
-  createdBy   User     @relation(fields: [userId], references: [id])
-  userId      String
-}
-
-model Cohort {
-  id             String   @id @default(cuid())
-  name           String
-  startDate      DateTime
-  endDate        DateTime
-  maxStudents    Int
-  currentStudents Int      @default(0)
-  status         String   // 'DRAFT' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
-  schedule       String   // JSON como string
-  createdAt      DateTime @default(now())
   
-  // Relaciones
-  course         Course   @relation(fields: [courseId], references: [id])
-  courseId       String
-  teachers       User[]   @relation("CohortTeachers")
-  students       User[]   @relation("CohortStudents")
+  // Índices
+  @@index([isActive])
+  @@map("courses")
 }
 
 model Module {
   id          String   @id @default(cuid())
   title       String
-  description String
+  description String?
   order       Int
   isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
   
   // Relaciones
-  course      Course   @relation(fields: [courseId], references: [id])
-  courseId    String
-  lessons     Lesson[]
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Índices
+  @@index([courseId])
+  @@index([order])
+  @@index([isActive])
+  @@map("modules")
 }
 
 model Lesson {
   id          String   @id @default(cuid())
   title       String
-  content     String
+  description String?
+  content     String?
+  videoUrl    String?
+  duration    Int      // en minutos
   order       Int
-  duration    Int // minutos
   isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
   
   // Relaciones
-  module      Module   @relation(fields: [moduleId], references: [id])
-  moduleId    String
-  progress    StudentProgress[]
+  moduleId String
+  module   Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Índices
+  @@index([moduleId])
+  @@index([order])
+  @@index([isActive])
+  @@map("lessons")
 }
 
-model StudentProgress {
+model Enrollment {
   id        String   @id @default(cuid())
-  completed Boolean  @default(false)
-  completedAt DateTime?
-  createdAt DateTime @default(now())
+  userId    String
+  courseId  String
+  status    EnrollmentStatus @default(ACTIVE)
+  progress  Float    @default(0) // porcentaje de progreso
   
   // Relaciones
-  student   User     @relation(fields: [studentId], references: [id])
-  studentId String
-  lesson    Lesson   @relation(fields: [lessonId], references: [id])
-  lessonId  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   
-  @@unique([studentId, lessonId])
+  // Timestamps
+  enrolledAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  // Índices
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@map("enrollments")
+}
+
+model Cohort {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  maxStudents Int?
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Índices
+  @@index([startDate])
+  @@index([endDate])
+  @@index([isActive])
+  @@map("cohorts")
+}
+
+// Enums
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  SUSPENDED
 }

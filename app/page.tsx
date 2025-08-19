@@ -33,9 +33,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/ui/Logo';
+import { getSupportConfig } from '@/lib/config';
 
 export default function LandingPage() {
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const supportConfig = getSupportConfig();
 
   const handleWhatsAppRedirect = () => {
     const message = encodeURIComponent(
@@ -46,7 +48,7 @@ export default function LandingPage() {
       "• Requisitos para inscribirme\n\n" +
       "¿Podrían ayudarme?"
     );
-    window.open(`https://wa.me/573001234567?text=${message}`, '_blank');
+    window.open(`${supportConfig.whatsappUrl}?text=${message}`, '_blank');
   };
 
   const handleLeadCapture = (e: React.FormEvent) => {
@@ -685,7 +687,7 @@ export default function LandingPage() {
               <div className="space-y-3 text-gray-400">
                 <p className="flex items-center gap-2">
                   <MessageCircle size={16} className="text-blue-400" />
-                  WhatsApp: +57 300 123 4567
+                  WhatsApp: {supportConfig.whatsapp}
                 </p>
                 <p className="flex items-center gap-2">
                   <Mail size={16} className="text-blue-400" />

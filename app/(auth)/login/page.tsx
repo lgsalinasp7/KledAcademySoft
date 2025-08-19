@@ -8,6 +8,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { logger } from "@/lib/logger";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,25 +22,24 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleSubmit = async (e?: React.FormEvent) => {
-    console.log('🔍 handleSubmit called with email:', email, 'password:', password);
+    logger.debug('Iniciando proceso de login', { email });
     if (e) e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      console.log('🔍 Calling signIn...');
+      logger.debug('Llamando a signIn...');
       const result = await signIn(email, password);
-      console.log('🔍 SignIn result:', result);
       
       if (result.success) {
-        console.log('🔍 Login successful, redirecting to dashboard...');
+        logger.info('Login exitoso', { email });
         router.push("/dashboard");
       } else {
-        console.log('🔍 Login failed:', result.error);
+        logger.warn('Login fallido', { error: result.error });
         setError(result.error || "Credenciales inválidas");
       }
     } catch (err) {
-      console.error('🔍 Login error:', err);
+      logger.error('Error en login', { error: err });
       setError("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
@@ -92,9 +93,9 @@ export default function LoginPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                  <Label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                     Email
-                  </label>
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -107,9 +108,9 @@ export default function LoginPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+                  <Label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
                     Contraseña
-                  </label>
+                  </Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -140,7 +141,7 @@ export default function LoginPage() {
                   </motion.div>
                 )}
 
-                <button
+                <Button
                   type="button"
                   disabled={isLoading}
                   onClick={handleSubmit}
@@ -154,7 +155,7 @@ export default function LoginPage() {
                   ) : (
                     "Iniciar Sesión"
                   )}
-                </button>
+                </Button>
               </form>
 
               {/* WhatsApp Support */}
@@ -192,32 +193,32 @@ export default function LoginPage() {
                 <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
                   <div>
                     <span className="text-yellow-400 font-semibold">Estudiante:</span>
-                    <span className="text-gray-300 ml-2">student@gmail.com</span>
+                    <span className="text-gray-300 ml-2">estudiante@gmail.com</span>
                   </div>
-                                     <button
-                     type="button"
-                     onClick={() => {
-                       console.log('🔍 Setting student credentials');
-                       setEmail("student@gmail.com");
-                       setPassword("123456");
-                     }}
-                     className="text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer px-2 py-1 rounded"
-                   >
-                     Usar
-                   </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logger.debug('Configurando credenciales de estudiante');
+                      setEmail("estudiante@gmail.com");
+                      setPassword("demo123");
+                    }}
+                    className="text-blue-400 hover:text-blue-300 bg-transparent border-none cursor-pointer px-2 py-1 rounded"
+                  >
+                    Usar
+                  </button>
                 </div>
                 
                 <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
                   <div>
                     <span className="text-green-400 font-semibold">Profesor:</span>
-                    <span className="text-gray-300 ml-2">teacher@kaledacademy.com</span>
+                    <span className="text-gray-300 ml-2">teacher@gmail.com</span>
                   </div>
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => {
-                      setEmail("teacher@kaledacademy.com");
-                      setPassword("123456");
+                      setEmail("teacher@gmail.com");
+                      setPassword("teacher123");
                     }}
                     className="text-blue-400 hover:text-blue-300"
                   >
@@ -228,14 +229,14 @@ export default function LoginPage() {
                 <div className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
                   <div>
                     <span className="text-red-400 font-semibold">Admin:</span>
-                    <span className="text-gray-300 ml-2">admin@kaledacademy.com</span>
+                    <span className="text-gray-300 ml-2">admin@gmail.com</span>
                   </div>
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => {
-                      setEmail("admin@kaledacademy.com");
-                      setPassword("123456");
+                      setEmail("admin@gmail.com");
+                      setPassword("admin123");
                     }}
                     className="text-blue-400 hover:text-blue-300"
                   >
@@ -244,8 +245,12 @@ export default function LoginPage() {
                 </div>
                 
                 <div className="text-center p-3 bg-gray-800 rounded-lg">
-                  <span className="text-gray-400 font-semibold">Contraseña para todos:</span>
-                  <span className="text-white ml-2">123456</span>
+                  <span className="text-gray-400 font-semibold">Contraseñas:</span>
+                  <div className="text-white mt-1">
+                    <div>Estudiante: demo123</div>
+                    <div>Profesor: teacher123</div>
+                    <div>Admin: admin123</div>
+                  </div>
                 </div>
               </div>
             </CardContent>
