@@ -6,17 +6,25 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Home, Building, Square, BookOpen, Users, Users2, Settings, Shield, BarChart3, Calendar, UserCheck } from 'lucide-react';
 import { Logo } from '../ui/Logo';
+
 interface NavigationProps {
   userRole?: string;
 }
 
 export function MainSidebar({ userRole }: NavigationProps) {
   const pathname = usePathname();
-  const currentView = pathname.split('/').pop() || 'home';
   
   // Determinar el rol del usuario
   const isAdmin = userRole && ['ADMIN', 'SUPER_ADMIN'].includes(userRole);
   const isTeacher = userRole === 'TEACHER';
+
+  // Función para determinar si una ruta está activa
+  const isRouteActive = (route: string) => {
+    if (route === 'teacher') {
+      return pathname === '/dashboard/teacher';
+    }
+    return pathname.startsWith(`/dashboard/${route}`);
+  };
 
   const studentNavigationItems = [
     {
@@ -24,28 +32,28 @@ export function MainSidebar({ userRole }: NavigationProps) {
       label: 'Home',
       icon: Home,
       view: 'home',
-      active: currentView === 'home'
+      active: isRouteActive('home')
     },
     {
       id: 'demo',
       label: 'Demo Store',
       icon: Square,
       view: 'demo',
-      active: currentView === 'demo'
+      active: isRouteActive('demo')
     },
     {
       id: 'payment-management',
       label: 'Gestión de pagos',
       icon: Building,
       view: 'payment-management',
-      active: currentView === 'payment-management'
+      active: isRouteActive('payment-management')
     },
     {
       id: 'kaled-x',
       label: 'KaledAcademy X',
       icon: Square,
       view: 'kaled-x',
-      active: currentView === 'kaled-x'
+      active: isRouteActive('kaled-x')
     }
   ];
 
@@ -55,63 +63,63 @@ export function MainSidebar({ userRole }: NavigationProps) {
       label: 'Dashboard',
       icon: Home,
       view: 'home',
-      active: currentView === 'home'
+      active: isRouteActive('home')
     },
     {
       id: 'admin-courses',
       label: 'Gestión de Cursos',
       icon: BookOpen,
       view: 'admin-courses',
-      active: currentView === 'admin-courses'
+      active: isRouteActive('admin-courses')
     },
     {
       id: 'admin-users',
       label: 'Gestión de Usuarios',
       icon: Users,
       view: 'admin-users',
-      active: currentView === 'admin-users'
+      active: isRouteActive('admin-users')
     },
     {
       id: 'admin-cohorts',
       label: 'Gestión de Cohortes',
       icon: Users2,
       view: 'admin-cohorts',
-      active: currentView === 'admin-cohorts'
+      active: isRouteActive('admin-cohorts')
     },
     {
       id: 'admin-credentials',
       label: 'Gestión de Credenciales',
       icon: Shield,
       view: 'admin-credentials',
-      active: currentView === 'admin-credentials'
+      active: isRouteActive('admin-credentials')
     },
     {
       id: 'admin-roles',
       label: 'Gestión de Roles',
       icon: UserCheck,
       view: 'admin-roles',
-      active: currentView === 'admin-roles'
+      active: isRouteActive('admin-roles')
     },
     {
       id: 'admin-settings',
       label: 'Configuraciones',
       icon: Settings,
       view: 'admin-settings',
-      active: currentView === 'admin-settings'
+      active: isRouteActive('admin-settings')
     },
     {
       id: 'admin-analytics',
       label: 'Analytics',
       icon: BarChart3,
       view: 'admin-analytics',
-      active: currentView === 'admin-analytics'
+      active: isRouteActive('admin-analytics')
     },
     {
       id: 'admin-calendar',
       label: 'Calendario',
       icon: Calendar,
       view: 'admin-calendar',
-      active: currentView === 'admin-calendar'
+      active: isRouteActive('admin-calendar')
     }
   ];
 
@@ -121,35 +129,35 @@ export function MainSidebar({ userRole }: NavigationProps) {
       label: 'Dashboard',
       icon: Home,
       view: 'teacher',
-      active: currentView === 'teacher'
+      active: isRouteActive('teacher')
     },
     {
       id: 'courses',
       label: 'Mis Cursos',
       icon: BookOpen,
       view: 'teacher/courses',
-      active: currentView === 'courses'
+      active: isRouteActive('teacher/courses')
     },
     {
       id: 'students',
       label: 'Mis Estudiantes',
       icon: Users,
       view: 'teacher/students',
-      active: currentView === 'students'
+      active: isRouteActive('teacher/students')
     },
     {
       id: 'evaluations',
       label: 'Evaluaciones',
       icon: UserCheck,
       view: 'teacher/evaluations',
-      active: currentView === 'evaluations'
+      active: isRouteActive('teacher/evaluations')
     },
     {
       id: 'messages',
       label: 'Mensajes',
       icon: Calendar,
       view: 'teacher/messages',
-      active: currentView === 'messages'
+      active: isRouteActive('teacher/messages')
     }
   ];
 
@@ -182,38 +190,38 @@ export function MainSidebar({ userRole }: NavigationProps) {
 
       {/* Main Navigation */}
       <nav className="flex-1 py-6">
-                 <div className="space-y-2 px-4">
-           {navigationItems.map(item => {
-             const Icon = item.icon;
-             return (
-               <Link
-                 key={item.id}
-                 href={`/dashboard/${item.view}`}
-                 className={`block w-full`}
-               >
-                 <motion.div
-                   whileHover={{ x: 4 }}
-                   whileTap={{ scale: 0.98 }}
-                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
-                     item.active 
-                       ? 'bg-gray-800 text-white border-l-4 border-yellow-400' 
-                       : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                   }`}
-                 >
-                   <Icon 
-                     size={20} 
-                     className={`${
-                       item.active 
-                         ? 'text-yellow-400' 
-                         : 'text-gray-400 group-hover:text-white'
-                     }`} 
-                   />
-                   <span className="font-medium text-sm">{item.label}</span>
-                 </motion.div>
-               </Link>
-             );
-           })}
-         </div>
+        <div className="space-y-2 px-4">
+          {navigationItems.map(item => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.id}
+                href={`/dashboard/${item.view}`}
+                className={`block w-full`}
+              >
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
+                    item.active 
+                      ? 'bg-gray-800 text-white border-l-4 border-yellow-400' 
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                  }`}
+                >
+                  <Icon 
+                    size={20} 
+                    className={`${
+                      item.active 
+                        ? 'text-yellow-400' 
+                        : 'text-gray-400 group-hover:text-white'
+                    }`} 
+                  />
+                  <span className="font-medium text-sm">{item.label}</span>
+                </motion.div>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </div>
   );

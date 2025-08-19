@@ -64,6 +64,30 @@ const mockUsers = [
   }
 ];
 
+// Función para establecer cookies de autenticación
+const setAuthCookies = (user: User) => {
+  if (typeof document !== 'undefined') {
+    // Establecer cookie de autenticación (simulando un token)
+    document.cookie = `auth-token=mock-token-${user.id}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict`;
+    
+    // Establecer cookie de rol
+    document.cookie = `user-role=${user.role}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict`;
+    
+    logger.debug('🍪 Cookies de autenticación establecidas', { userId: user.id, role: user.role });
+  }
+};
+
+// Función para limpiar cookies de autenticación
+const clearAuthCookies = () => {
+  if (typeof document !== 'undefined') {
+    // Limpiar cookies estableciendo fecha de expiración en el pasado
+    document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'user-role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    
+    logger.debug('🧹 Cookies de autenticación limpiadas');
+  }
+};
+
 export const useAuthStore = create<AuthState>()(
   subscribeWithSelector(
     devtools(
@@ -90,11 +114,16 @@ export const useAuthStore = create<AuthState>()(
               );
               
               if (mockUser) {
+                // Establecer cookies de autenticación
+                setAuthCookies(mockUser);
+                
                 set({ 
                   user: mockUser, 
                   isAuthenticated: true, 
                   isLoading: false 
                 });
+                
+                logger.info('✅ Login exitoso con usuario mock', { email, role: mockUser.role });
                 return { success: true };
               }
               
@@ -117,6 +146,9 @@ export const useAuthStore = create<AuthState>()(
                 return { success: false, error: data.error };
               }
               
+              // Establecer cookies de autenticación para usuario real
+              setAuthCookies(data.user);
+              
               set({ 
                 user: data.user, 
                 isAuthenticated: true, 
@@ -125,27 +157,43 @@ export const useAuthStore = create<AuthState>()(
               
               return { success: true };
               
-                    } catch (error) {
-          logger.error('Error en signIn', { error });
-          set({
-            error: 'Error de conexión',
-            isLoading: false
-          });
-          return { success: false, error: 'Error de conexión' };
-        }
+            } catch (error) {
+              logger.error('Error en signIn', { error });
+              set({
+                error: 'Error de conexión',
+                isLoading: false
+              });
+              return { success: false, error: 'Error de conexión' };
+            }
           },
           
           signOut: () => {
+            // Limpiar cookies de autenticación
+            clearAuthCookies();
+            
             set({ 
               user: null, 
               isAuthenticated: false, 
               error: null 
             });
+            
+            logger.info('👋 Usuario desconectado');
           },
           
           checkAuth: async () => {
             const { user, isAuthenticated } = get();
             if (user && isAuthenticated) {
+              // Verificar que las cookies estén presentes
+              if (typeof document !== 'undefined') {
+                const hasAuthToken = document.cookie.includes('auth-token=');
+                const hasUserRole = document.cookie.includes('user-role=');
+                
+                if (!hasAuthToken || !hasUserRole) {
+                  // Re-establecer cookies si faltan
+                  setAuthCookies(user);
+                  logger.debug('🔄 Cookies re-establecidas durante checkAuth');
+                }
+              }
               return; // Ya está autenticado
             }
             

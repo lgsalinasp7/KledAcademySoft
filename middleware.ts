@@ -59,6 +59,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // EN DESARROLLO: Permitir acceso a rutas protegidas sin autenticación
+  // para facilitar las pruebas con datos mock
+  if (process.env.NODE_ENV === 'development' && isProtectedRoute && !token) {
+    logger.debug(`🔧 Desarrollo: Permitiendo acceso a ruta protegida sin autenticación: ${pathname}`);
+    return NextResponse.next();
+  }
+
   // Si es una ruta protegida pero no hay token, redirigir a login
   if (isProtectedRoute && !token) {
     logger.warn(`🚫 Acceso no autorizado a ruta protegida: ${pathname}`);
