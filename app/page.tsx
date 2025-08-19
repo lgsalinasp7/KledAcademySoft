@@ -34,6 +34,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/ui/Logo';
 import { getSupportConfig } from '@/lib/config';
+import { kaledAcademyBranding } from '@/lib/config/branding';
 
 export default function LandingPage() {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -41,7 +42,7 @@ export default function LandingPage() {
 
   const handleWhatsAppRedirect = () => {
     const message = encodeURIComponent(
-      "¡Hola! Estoy interesado en el Bootcamp de KaledAcademy. Me gustaría obtener más información sobre:\n\n" +
+      `¡Hola! Estoy interesado en el Bootcamp de ${kaledAcademyBranding.appName}. Me gustaría obtener más información sobre:\n\n` +
       "• Precios y formas de pago\n" +
       "• Horarios de clases\n" +
       "• Ubicación de clases presenciales\n" +
@@ -182,7 +183,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
                 <Rocket className="text-white" size={28} />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">¡Únete a KaledAcademy!</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">¡Únete a {kaledAcademyBranding.appName}!</h3>
               <p className="text-gray-400">
                 Completa tus datos y te contactaremos para resolver todas tus dudas sobre el bootcamp.
               </p>
@@ -559,7 +560,7 @@ export default function LandingPage() {
                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                  ¿Por qué Elegir
                </span>
-               <span className="text-white"> KaledAcademy?</span>
+               <span className="text-white"> {kaledAcademyBranding.appName}?</span>
              </h2>
              <p className="text-xl text-gray-400">
                Ventajas únicas que te harán destacar en el mercado laboral
@@ -645,7 +646,7 @@ export default function LandingPage() {
               ¿Listo para Cambiar tu Futuro?
             </h2>
             <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
-              Únete a cientos de estudiantes que ya transformaron sus carreras con KaledAcademy. 
+              Únete a cientos de estudiantes que ya transformaron sus carreras con {kaledAcademyBranding.appName}. 
               ¡El momento es ahora!
             </p>
             
@@ -691,7 +692,7 @@ export default function LandingPage() {
                 </p>
                 <p className="flex items-center gap-2">
                   <Mail size={16} className="text-blue-400" />
-                  Email: info@kaledacademy.com
+                  Email: {kaledAcademyBranding.companyEmail}
                 </p>
                 <p className="flex items-center gap-2">
                   <MapPin size={16} className="text-blue-400" />
@@ -735,7 +736,7 @@ export default function LandingPage() {
           </div>
           
           <div className="border-t border-blue-500/20 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 KaledAcademy. Todos los derechos reservados.</p>
+            <p>&copy; 2024 {kaledAcademyBranding.appName}. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>

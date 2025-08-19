@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   Search, 
-  Filter, 
   Edit, 
   Trash2, 
   Eye,
@@ -49,7 +48,7 @@ interface Course {
 }
 
 interface CoursesManagementProps {
-  user: User;
+  // user: User; // No se usa actualmente
 }
 
 interface CourseFormData {
@@ -106,7 +105,7 @@ const demoCourses: Course[] = [
   }
 ];
 
-export function CoursesManagement({ user }: CoursesManagementProps) {
+export function CoursesManagement({ }: CoursesManagementProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);

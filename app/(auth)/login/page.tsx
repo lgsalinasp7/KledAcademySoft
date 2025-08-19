@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { logger } from "@/lib/logger";
+import { kaledAcademyBranding } from "@/lib/config/branding";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -48,9 +49,9 @@ export default function LoginPage() {
 
   const handleWhatsAppRedirect = () => {
     const message = encodeURIComponent(
-      "¡Hola! Necesito ayuda para acceder a mi cuenta de KaledAcademy. ¿Podrían ayudarme?"
+      `¡Hola! Necesito ayuda para acceder a mi cuenta de ${kaledAcademyBranding.appName}. ¿Podrían ayudarme?`
     );
-    window.open(`https://wa.me/573001234567?text=${message}`, '_blank');
+    window.open(`https://wa.me/${kaledAcademyBranding.supportWhatsApp}?text=${message}`, '_blank');
   };
 
   return (
@@ -67,13 +68,13 @@ export default function LoginPage() {
             <div className="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center">
               <span className="text-black font-bold text-xl">K</span>
             </div>
-            <span className="text-white font-bold text-3xl">KaledAcademy</span>
+            <span className="text-white font-bold text-3xl">{kaledAcademyBranding.appName}</span>
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">
-            Bienvenido de vuelta
+            {kaledAcademyBranding.ui.login.title}
           </h1>
           <p className="text-gray-400">
-            Inicia sesión en tu cuenta para continuar
+            {kaledAcademyBranding.ui.login.subtitle}
           </p>
         </motion.div>
 
@@ -85,9 +86,9 @@ export default function LoginPage() {
         >
           <Card className="bg-gray-900 border-gray-700">
             <CardHeader className="text-center">
-              <CardTitle className="text-white text-xl">Iniciar Sesión</CardTitle>
+              <CardTitle className="text-white text-xl">{kaledAcademyBranding.ui.login.loginButton}</CardTitle>
               <CardDescription className="text-gray-400">
-                Accede a tu plataforma educativa
+                {kaledAcademyBranding.ui.login.subtitle}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -101,7 +102,7 @@ export default function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tu@email.com"
+                    placeholder={kaledAcademyBranding.ui.login.emailPlaceholder}
                     className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-yellow-400"
                     required
                   />
@@ -109,7 +110,7 @@ export default function LoginPage() {
 
                 <div>
                   <Label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                    Contraseña
+                    {kaledAcademyBranding.ui.login.passwordPlaceholder}
                   </Label>
                   <div className="relative">
                     <Input
@@ -153,7 +154,7 @@ export default function LoginPage() {
                       Iniciando sesión...
                     </div>
                   ) : (
-                    "Iniciar Sesión"
+                                          kaledAcademyBranding.ui.login.loginButton
                   )}
                 </Button>
               </form>
@@ -167,7 +168,7 @@ export default function LoginPage() {
                   className="w-full border-green-600 text-green-400 hover:bg-green-600 hover:text-white"
                 >
                   <MessageCircle size={16} className="mr-2" />
-                  ¿Necesitas ayuda? Contacta por WhatsApp
+                  {kaledAcademyBranding.ui.login.supportButton}
                 </Button>
               </div>
             </CardContent>
@@ -183,9 +184,9 @@ export default function LoginPage() {
         >
           <Card className="bg-gray-900/50 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white text-lg">Usuarios de Prueba</CardTitle>
+              <CardTitle className="text-white text-lg">{kaledAcademyBranding.ui.login.testUsersTitle}</CardTitle>
               <CardDescription className="text-gray-400">
-                Utiliza estas credenciales para probar la plataforma
+                {kaledAcademyBranding.ui.login.testUsersDescription}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">

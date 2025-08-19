@@ -6,7 +6,6 @@ import {
   UserPlus, 
   Search, 
   Mail, 
-  Key, 
   Copy, 
   CheckCircle, 
   AlertCircle,
@@ -18,17 +17,17 @@ import {
 } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Badge } from '../../ui/badge';
 import { useUsersStore, Student } from '@/stores/usersStore';
 import { CreateStudentModal } from './CreateStudentModal';
 import { PaymentNotesModal } from './PaymentNotesModal';
 
 interface CredentialsManagementProps {
-  user: any;
+  // user: any; // No se usa actualmente
 }
 
-export function CredentialsManagement({ user }: CredentialsManagementProps) {
+export function CredentialsManagement({ }: CredentialsManagementProps) {
   const { 
     students, 
     generateCredentials, 
@@ -43,7 +42,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [newPaymentStatus, setNewPaymentStatus] = useState<'pending' | 'completed' | 'failed'>('pending');
+  const [newPaymentStatus, setNewPaymentStatus] = useState<'PENDING' | 'COMPLETED' | 'FAILED'>('PENDING');
 
   const filteredStudents = searchTerm 
     ? searchStudents(searchTerm)
@@ -72,7 +71,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
     console.log(`Credenciales enviadas a ${student.name} (${student.phone})`);
   };
 
-  const handleUpdatePaymentStatus = (student: Student, newStatus: 'pending' | 'completed' | 'failed') => {
+  const handleUpdatePaymentStatus = (student: Student, newStatus: 'PENDING' | 'COMPLETED' | 'FAILED') => {
     // SIEMPRE mostrar modal de Shadcn UI para cualquier cambio de estado
     setSelectedStudent(student);
     setNewPaymentStatus(newStatus);
@@ -89,9 +88,9 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-green-900 text-green-300';
-      case 'pending': return 'bg-yellow-900 text-yellow-300';
-      case 'failed': return 'bg-red-900 text-red-300';
+      case 'COMPLETED': return 'bg-green-900 text-green-300';
+      case 'PENDING': return 'bg-yellow-900 text-yellow-300';
+      case 'FAILED': return 'bg-red-900 text-red-300';
       default: return 'bg-gray-900 text-gray-300';
     }
   };
@@ -151,7 +150,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
           <Card className="bg-gray-900 border-gray-700">
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-green-400 mb-2">
-                {students.filter(s => s.paymentStatus === 'completed').length}
+                {students.filter(s => s.paymentStatus === 'COMPLETED').length}
               </div>
               <p className="text-gray-400 text-sm">Pagos Completados</p>
             </CardContent>
@@ -257,7 +256,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                   </div>
 
                   {/* Credentials Section */}
-                  {student.paymentStatus === 'completed' && (
+                  {student.paymentStatus === 'COMPLETED' && (
                     <div className="flex flex-col gap-3">
                       {student.credentialsGenerated ? (
                         <div className="space-y-2">
@@ -333,12 +332,12 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                   )}
 
                   {/* Pending Payment */}
-                  {student.paymentStatus === 'pending' && (
+                  {student.paymentStatus === 'PENDING' && (
                     <div className="text-center">
                       <p className="text-yellow-400 text-sm mb-2">Pendiente de pago</p>
                       <div className="flex gap-2 justify-center">
                         <Button
-                          onClick={() => handleUpdatePaymentStatus(student, 'completed')}
+                          onClick={() => handleUpdatePaymentStatus(student, 'COMPLETED')}
                           className="bg-green-600 hover:bg-green-700 text-white"
                           size="sm"
                         >
@@ -346,7 +345,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                           Marcar como Pagado
                         </Button>
                         <Button
-                          onClick={() => handleUpdatePaymentStatus(student, 'failed')}
+                          onClick={() => handleUpdatePaymentStatus(student, 'FAILED')}
                           className="bg-red-600 hover:bg-red-700 text-white"
                           size="sm"
                         >
@@ -358,12 +357,12 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                   )}
 
                   {/* Failed Payment */}
-                  {student.paymentStatus === 'failed' && (
+                  {student.paymentStatus === 'FAILED' && (
                     <div className="text-center">
                       <p className="text-red-400 text-sm mb-2">Pago fallido</p>
                       <div className="flex gap-2 justify-center">
                         <Button
-                          onClick={() => handleUpdatePaymentStatus(student, 'completed')}
+                          onClick={() => handleUpdatePaymentStatus(student, 'COMPLETED')}
                           className="bg-green-600 hover:bg-green-700 text-white"
                           size="sm"
                         >
@@ -371,7 +370,7 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                           Marcar como Pagado
                         </Button>
                         <Button
-                          onClick={() => handleUpdatePaymentStatus(student, 'pending')}
+                          onClick={() => handleUpdatePaymentStatus(student, 'PENDING')}
                           className="bg-yellow-600 hover:bg-yellow-700 text-white"
                           size="sm"
                         >
@@ -383,17 +382,17 @@ export function CredentialsManagement({ user }: CredentialsManagementProps) {
                   )}
 
                   {/* Completed Payment - Option to revert */}
-                  {student.paymentStatus === 'completed' && (
+                  {student.paymentStatus === 'COMPLETED' && (
                     <div className="text-center">
                       <p className="text-green-400 text-sm mb-2">Pago completado</p>
-                      <Button
-                        onClick={() => handleUpdatePaymentStatus(student, 'pending')}
-                        variant="outline"
-                        className="border-gray-600 text-gray-400 hover:bg-gray-800"
-                        size="sm"
-                      >
-                        <AlertCircle size={14} className="mr-2" />
-                        Revertir a Pendiente
+                                              <Button
+                          onClick={() => handleUpdatePaymentStatus(student, 'PENDING')}
+                          variant="outline"
+                          className="border-gray-600 text-gray-400 hover:bg-gray-800"
+                          size="sm"
+                        >
+                          <AlertCircle size={14} className="mr-2" />
+                          Revertir a Pendiente
                       </Button>
                     </div>
                   )}

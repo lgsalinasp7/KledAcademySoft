@@ -58,6 +58,17 @@ export {
   defaultTheme,
 } from './themes';
 
+// Sistema de branding
+export type { BrandingConstants } from './branding';
+export {
+  kaledAcademyBranding,
+  languageSchoolBranding,
+  businessBranding,
+  getBrandingConfig,
+  createCustomBranding,
+  defaultBranding,
+} from './branding';
+
 // ============================================================================
 // CONFIGURACIÓN COMPLETA DE LA APLICACIÓN
 // ============================================================================
@@ -65,16 +76,21 @@ export {
 import { AppConfig, defaultAppConfig } from './app';
 import { kaledAcademyRoles } from './roles';
 import { kaledAcademyTheme } from './themes';
+import { kaledAcademyBranding } from './branding';
 
 // Configuración completa de KaledAcademy
 export const kaledAcademyConfig: AppConfig = {
   ...defaultAppConfig,
+  name: kaledAcademyBranding.appName,
+  description: kaledAcademyBranding.appDescription,
   roles: kaledAcademyRoles,
   branding: {
     ...defaultAppConfig.branding,
     colors: kaledAcademyTheme.colors,
     fonts: kaledAcademyTheme.fonts,
     logo: kaledAcademyTheme.logo,
+    name: kaledAcademyBranding.appName,
+    tagline: kaledAcademyBranding.appDescription,
   },
   features: [
     {
@@ -148,11 +164,13 @@ export function getAppConfig(): AppConfig {
 }
 
 /**
- * Obtiene la configuración de branding
+ * Obtiene la configuración de branding de la app actual
  */
-export function getBrandingConfig() {
+export function getCurrentBrandingConfig() {
   return kaledAcademyConfig.branding;
 }
+
+
 
 /**
  * Obtiene la configuración de roles

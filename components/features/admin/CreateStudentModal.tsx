@@ -23,7 +23,7 @@ interface StudentFormData {
   name: string;
   email: string;
   phone: string;
-  paymentStatus: 'pending' | 'completed' | 'failed';
+  paymentStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
 }
 
 export function CreateStudentModal({ isOpen, onClose }: CreateStudentModalProps) {
@@ -32,7 +32,7 @@ export function CreateStudentModal({ isOpen, onClose }: CreateStudentModalProps)
     name: '',
     email: '',
     phone: '',
-    paymentStatus: 'pending'
+    paymentStatus: 'PENDING'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,8 +42,7 @@ export function CreateStudentModal({ isOpen, onClose }: CreateStudentModalProps)
 
     try {
       addStudent({
-        ...formData,
-        credentialsGenerated: false
+        ...formData
       });
       
       // Reset form
@@ -51,7 +50,7 @@ export function CreateStudentModal({ isOpen, onClose }: CreateStudentModalProps)
         name: '',
         email: '',
         phone: '',
-        paymentStatus: 'pending'
+        paymentStatus: 'PENDING'
       });
       
       onClose();

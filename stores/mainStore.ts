@@ -19,7 +19,7 @@ interface MainStoreState {
   // Acciones de autenticación
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => void;
-  signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
+  // signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>; // No implementado en authStore
   
   // Acciones de navegación
   navigateTo: (view: string) => void;
@@ -118,10 +118,10 @@ export const useMainStore = create<MainStoreState>()(
           get().resetAllStores();
         },
 
-        signUp: async (email: string, password: string, name: string) => {
-          const authStore = useAuthStore.getState();
-          return await authStore.signUp(email, password, name);
-        },
+        // signUp: async (email: string, password: string, name: string) => {
+        //   const authStore = useAuthStore.getState();
+        //   return await authStore.signUp(email, password, name);
+        // }, // No implementado en authStore
 
         // Acciones de navegación
         navigateTo: (view: string) => {

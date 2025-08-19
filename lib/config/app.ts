@@ -31,6 +31,8 @@ export interface AppConfig {
 }
 
 export interface BrandingConfig {
+  name: string;
+  tagline: string;
   logo: {
     light: string;
     dark: string;
@@ -357,6 +359,8 @@ export const defaultAppConfig: AppConfig = {
   environment: "development",
   
   branding: {
+    name: "KaledAcademy",
+    tagline: "Plataforma educativa moderna",
     logo: {
       light: "/kaled-logo.svg",
       dark: "/kaled-logo.svg",

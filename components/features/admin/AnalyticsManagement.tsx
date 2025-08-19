@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, TrendingUp, Users, BookOpen, DollarSign, Target, Calendar, Download, Filter } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, BookOpen, DollarSign, Target, Calendar, Download } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -95,7 +95,7 @@ const mockAnalyticsData: AnalyticsData = {
 };
 
 export function AnalyticsManagement({ user }: AnalyticsManagementProps) {
-  const [data, setData] = useState<AnalyticsData>(mockAnalyticsData);
+  const [data] = useState<AnalyticsData>(mockAnalyticsData);
   const [timeRange, setTimeRange] = useState('6m');
   const [activeTab, setActiveTab] = useState('overview');
 

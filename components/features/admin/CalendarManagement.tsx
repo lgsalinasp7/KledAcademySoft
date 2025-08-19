@@ -2,12 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Users, BookOpen, Plus, Edit, Trash2, Bell, MapPin } from 'lucide-react';
+import { Calendar, Clock, Users, BookOpen, Plus, Edit, Trash2, MapPin } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
-import { Input } from '../../ui/input';
-import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 
@@ -95,7 +93,7 @@ const mockEvents: CalendarEvent[] = [
 ];
 
 export function CalendarManagement({ user }: CalendarManagementProps) {
-  const [events, setEvents] = useState<CalendarEvent[]>(mockEvents);
+  const [events] = useState<CalendarEvent[]>(mockEvents);
   const [selectedDate, setSelectedDate] = useState('2025-01-15');
   const [activeTab, setActiveTab] = useState('calendar');
   const [showAddEvent, setShowAddEvent] = useState(false);

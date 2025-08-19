@@ -1,4 +1,4 @@
-import { ColorPalette, BrandingConfig } from './app';
+import { ColorPalette } from './app';
 
 // ============================================================================
 // INTERFACES Y TIPOS PARA TEMAS

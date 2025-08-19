@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
   Search, 
-  Filter, 
   Edit, 
   Trash2, 
   Users,
@@ -60,7 +59,7 @@ interface Cohort {
 }
 
 interface CohortsManagementProps {
-  user: User;
+  // user: User; // No se usa actualmente
 }
 
 interface CohortFormData {
@@ -187,7 +186,7 @@ const demoCohorts: Cohort[] = [
   }
 ];
 
-export function CohortsManagement({ user }: CohortsManagementProps) {
+export function CohortsManagement({ }: CohortsManagementProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'active' | 'completed' | 'cancelled'>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
