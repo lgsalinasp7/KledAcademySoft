@@ -128,36 +128,36 @@ export function MainSidebar({ userRole }: NavigationProps) {
       id: 'home',
       label: 'Dashboard',
       icon: Home,
-      view: 'teacher',
-      active: isRouteActive('teacher')
+      view: 'teacher-dashboard',
+      active: isRouteActive('teacher-dashboard')
     },
     {
       id: 'courses',
       label: 'Mis Cursos',
       icon: BookOpen,
-      view: 'teacher/courses',
-      active: isRouteActive('teacher/courses')
+      view: 'teacher-dashboard/courses',
+      active: isRouteActive('teacher-dashboard/courses')
     },
     {
       id: 'students',
       label: 'Mis Estudiantes',
       icon: Users,
-      view: 'teacher/students',
-      active: isRouteActive('teacher/students')
+      view: 'teacher-dashboard/students',
+      active: isRouteActive('teacher-dashboard/students')
     },
     {
       id: 'evaluations',
       label: 'Evaluaciones',
       icon: UserCheck,
-      view: 'teacher/evaluations',
-      active: isRouteActive('teacher/evaluations')
+      view: 'teacher-dashboard/evaluations',
+      active: isRouteActive('teacher-dashboard/evaluations')
     },
     {
       id: 'messages',
       label: 'Mensajes',
       icon: Calendar,
-      view: 'teacher/messages',
-      active: isRouteActive('teacher/messages')
+      view: 'teacher-dashboard/messages',
+      active: isRouteActive('teacher-dashboard/messages')
     }
   ];
 
