@@ -120,29 +120,36 @@ export function MainSidebar({ userRole }: NavigationProps) {
       id: 'home',
       label: 'Dashboard',
       icon: Home,
-      view: 'home',
-      active: currentView === 'home'
+      view: 'teacher',
+      active: currentView === 'teacher'
     },
     {
-      id: 'admin-courses',
+      id: 'courses',
       label: 'Mis Cursos',
       icon: BookOpen,
-      view: 'admin-courses',
-      active: currentView === 'admin-courses'
+      view: 'teacher/courses',
+      active: currentView === 'courses'
     },
     {
-      id: 'admin-cohorts',
-      label: 'Mis Cohortes',
-      icon: Users2,
-      view: 'admin-cohorts',
-      active: currentView === 'admin-cohorts'
+      id: 'students',
+      label: 'Mis Estudiantes',
+      icon: Users,
+      view: 'teacher/students',
+      active: currentView === 'students'
     },
     {
-      id: 'content',
-      label: 'Contenido',
-      icon: Square,
-      view: 'content',
-      active: currentView === 'content'
+      id: 'evaluations',
+      label: 'Evaluaciones',
+      icon: UserCheck,
+      view: 'teacher/evaluations',
+      active: currentView === 'evaluations'
+    },
+    {
+      id: 'messages',
+      label: 'Mensajes',
+      icon: Calendar,
+      view: 'teacher/messages',
+      active: currentView === 'messages'
     }
   ];
 

@@ -47,7 +47,7 @@ const mockUsers = [
   {
     id: '2',
     email: 'teacher@gmail.com',
-    name: 'Profesor',
+    name: 'Profesor Demo',
     role: 'TEACHER' as const,
     username: 'teacher',
     isActive: true,
