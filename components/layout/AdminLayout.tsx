@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { EducationalSidebar } from './EducationalSidebar';
+import { OriginalKaledAcademySidebar } from './OriginalKaledAcademySidebar';
 import { AppHeader } from './AppHeader';
 
 // Admin Views
@@ -31,6 +31,7 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
   const pathname = usePathname();
+  const [currentView, setCurrentView] = useState('home');
 
   const getPageTitle = () => {
     if (pathname.includes('/dashboard/admin/courses')) return 'Gestión de Cursos';
@@ -45,7 +46,7 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
     if (pathname.includes('/dashboard/assessments')) return 'Evaluaciones';
     if (pathname.includes('/dashboard/students')) return 'Estudiantes';
     if (pathname.includes('/dashboard/progress')) return 'Progreso';
-    return 'Dashboard Educativo';
+    return 'Dashboard de KaledAcademy';
   };
 
   const renderContent = () => {
@@ -148,8 +149,11 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
 
   return (
     <div className="h-screen bg-black flex overflow-hidden">
-      {/* Educational Sidebar */}
-      <EducationalSidebar userRole={user.role} />
+      {/* Original KaledAcademy Sidebar */}
+      <OriginalKaledAcademySidebar 
+        userRole={user.role} 
+        currentView={currentView}
+      />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
