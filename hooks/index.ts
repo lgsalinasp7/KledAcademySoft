@@ -1,10 +1,15 @@
-// ============================================================================
-// EXPORTACIONES DE HOOKS
-// ============================================================================
-
-export { useTheme } from './useTheme';
+// Hooks
 export { useAuth } from './useAuth';
-export { useNavigation } from './useNavigation';
-export { useProgress } from './useProgress';
+export { useTheme } from './useTheme';
 export { useIsMobile } from './use-mobile';
-export { useApp } from './useApp';
+export { useModularSystem } from './useModularSystem';
+
+// Components
+export { ProtectedRoute, ProtectedModule } from './useModularSystem';
+
+// Teacher Components
+export { TeacherDashboardView } from '@/components/features/teacher/TeacherDashboardView';
+export { CoursesManagement } from '@/components/features/teacher/CoursesManagement';
+export { StudentsManagement } from '@/components/features/teacher/StudentsManagement';
+export { EvaluationsManagement } from '@/components/features/teacher/EvaluationsManagement';
+export { MessagesManagement } from '@/components/features/teacher/MessagesManagement';

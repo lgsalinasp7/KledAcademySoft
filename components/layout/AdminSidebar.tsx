@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
   GraduationCap, 
@@ -18,19 +19,24 @@ import {
 import { Logo } from '../ui/Logo';
 
 interface AdminSidebarProps {
-  currentView: string;
-  onViewChange: (view: string) => void;
   userRole: string;
 }
 
-export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSidebarProps) {
+export function AdminSidebar({ userRole }: AdminSidebarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isRouteActive = (route: string) => {
+    return pathname.includes(route);
+  };
+
   const getNavigationItems = () => {
     const baseItems = [
       {
         id: 'admin-dashboard',
         label: 'Dashboard',
         icon: LayoutDashboard,
-        view: 'admin-dashboard',
+        route: '/dashboard/admin',
         section: 'main'
       }
     ];
@@ -40,28 +46,28 @@ export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSideb
         id: 'courses',
         label: 'Cursos',
         icon: GraduationCap,
-        view: 'admin-courses',
+        route: '/dashboard/admin/courses',
         section: 'content'
       },
       {
         id: 'cohorts',
         label: 'Cohortes',
         icon: School,
-        view: 'admin-cohorts',
+        route: '/dashboard/admin/cohorts',
         section: 'content'
       },
       {
         id: 'modules',
         label: 'Módulos',
         icon: BookOpen,
-        view: 'admin-modules',
+        route: '/dashboard/admin/modules',
         section: 'content'
       },
       {
         id: 'lessons',
         label: 'Lecciones',
         icon: FileText,
-        view: 'admin-lessons',
+        route: '/dashboard/admin/lessons',
         section: 'content'
       }
     ];
@@ -71,35 +77,35 @@ export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSideb
         id: 'users',
         label: 'Usuarios',
         icon: Users,
-        view: 'admin-users',
+        route: '/dashboard/admin/users',
         section: 'management'
       },
       {
         id: 'credentials',
         label: 'Gestión de Credenciales',
         icon: Shield,
-        view: 'admin-credentials',
+        route: '/dashboard/admin/credentials',
         section: 'management'
       },
       {
         id: 'roles',
         label: 'Gestión de Roles',
         icon: UserCog,
-        view: 'admin-roles',
+        route: '/dashboard/admin/roles',
         section: 'management'
       },
       {
         id: 'calendar',
         label: 'Calendario',
         icon: Calendar,
-        view: 'admin-calendar',
+        route: '/dashboard/admin/calendar',
         section: 'management'
       },
       {
         id: 'analytics',
         label: 'Analytics',
         icon: BarChart3,
-        view: 'admin-analytics',
+        route: '/dashboard/admin/analytics',
         section: 'management'
       }
     ];
@@ -109,56 +115,41 @@ export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSideb
         id: 'settings',
         label: 'Configuración',
         icon: Settings,
-        view: 'admin-settings',
+        route: '/dashboard/admin/settings',
         section: 'system'
       }
     ];
 
-    // Filter based on role
-    if (userRole === 'teacher') {
-      return [
-        ...baseItems,
-        ...adminItems.filter(item => ['modules', 'lessons'].includes(item.id)),
-        ...managementItems.filter(item => ['calendar', 'analytics'].includes(item.id))
-      ];
-    }
-
-    if (userRole === 'admin') {
-      return [...baseItems, ...adminItems, ...managementItems];
-    }
-
-    // super_admin gets everything
-    return [...baseItems, ...adminItems, ...managementItems, ...systemItems];
+    return {
+      main: baseItems,
+      content: adminItems,
+      management: managementItems,
+      system: systemItems
+    };
   };
 
-  const navigationItems = getNavigationItems();
-  const sections = {
-    main: navigationItems.filter(item => item.section === 'main'),
-    content: navigationItems.filter(item => item.section === 'content'),
-    management: navigationItems.filter(item => item.section === 'management'),
-    system: navigationItems.filter(item => item.section === 'system')
-  };
+  const sections = getNavigationItems();
 
   const renderSection = (items: any[], title?: string) => (
-    <div className="space-y-2">
+    <div key={title || 'main'} className="space-y-2">
       {title && (
-        <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-2">
           {title}
         </h3>
       )}
       {items.map(item => {
         const Icon = item.icon;
-        const isActive = currentView === item.view;
+        const isActive = isRouteActive(item.route);
         
         return (
           <motion.button
             key={item.id}
-            onClick={() => onViewChange(item.view)}
+            onClick={() => router.push(item.route)}
             whileHover={{ x: 4 }}
             whileTap={{ scale: 0.98 }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 group ${
               isActive 
-                ? 'bg-blue-600 text-white shadow-lg' 
+                ? 'bg-gray-800 text-white border-l-4 border-yellow-400' 
                 : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
             }`}
           >
@@ -166,19 +157,11 @@ export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSideb
               size={18} 
               className={`${
                 isActive 
-                  ? 'text-white' 
+                  ? 'text-yellow-400' 
                   : 'text-gray-400 group-hover:text-white'
               }`} 
             />
             <span className="font-medium text-sm">{item.label}</span>
-            {isActive && (
-              <motion.div
-                layoutId="activeIndicator"
-                className="ml-auto w-2 h-2 bg-white rounded-full"
-                initial={false}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
           </motion.button>
         );
       })}
@@ -219,13 +202,13 @@ export function AdminSidebar({ currentView, onViewChange, userRole }: AdminSideb
         <div className="bg-gray-800 rounded-lg p-3">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${
-              userRole === 'super_admin' ? 'bg-red-400' :
-              userRole === 'admin' ? 'bg-blue-400' :
+              userRole === 'SUPER_ADMIN' ? 'bg-red-400' :
+              userRole === 'ADMIN' ? 'bg-blue-400' :
               'bg-green-400'
             }`} />
             <span className="text-xs font-medium text-gray-300">
-              {userRole === 'super_admin' ? 'Super Admin' :
-               userRole === 'admin' ? 'Administrador' :
+              {userRole === 'SUPER_ADMIN' ? 'Super Admin' :
+               userRole === 'ADMIN' ? 'Administrador' :
                'Profesor'}
             </span>
           </div>

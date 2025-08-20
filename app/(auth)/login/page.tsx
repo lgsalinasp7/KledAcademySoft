@@ -34,7 +34,32 @@ export default function LoginPage() {
       
       if (result.success) {
         logger.info('Login exitoso', { email });
-        router.push("/dashboard");
+        
+        // Redirigir según el rol del usuario
+        const user = useAuthStore.getState().user;
+        if (user) {
+          switch (user.role) {
+            case 'ADMIN':
+            case 'SUPER_ADMIN':
+              logger.info('Redirigiendo admin a dashboard de administración');
+              router.push('/dashboard/admin');
+              break;
+            case 'TEACHER':
+              logger.info('Redirigiendo profesor a dashboard de profesor');
+              router.push('/dashboard/teacher');
+              break;
+            case 'STUDENT':
+              logger.info('Redirigiendo estudiante a dashboard de estudiante');
+              router.push('/dashboard/home');
+              break;
+            default:
+              logger.warn('Rol no reconocido, redirigiendo a home');
+              router.push('/dashboard/home');
+          }
+        } else {
+          // Fallback si no hay usuario
+          router.push('/dashboard/home');
+        }
       } else {
         logger.warn('Login fallido', { error: result.error });
         setError(result.error || "Credenciales inválidas");

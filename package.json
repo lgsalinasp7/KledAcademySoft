@@ -27,7 +27,14 @@
     "security:audit": "npm audit",
     "security:fix": "npm audit fix",
     "clean": "node scripts/clean-and-restart.js",
-    "clean:all": "rm -rf .next dist node_modules package-lock.json && npm install"
+    "clean:all": "rm -rf .next dist node_modules package-lock.json && npm install",
+    "create-template": "node templates/scripts/create-template.js",
+    "configure-app": "node templates/scripts/configure-app.js",
+    "customize-branding": "node templates/scripts/customize-branding.js",
+    "setup-database": "node templates/scripts/setup-database.js",
+    "deploy:vercel": "vercel --prod",
+    "deploy:docker": "docker build -t kaledacademy . && docker run -p 3000:3000 kaledacademy",
+    "deploy:manual": "npm run build && npm run start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
