@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { AdminSidebar } from './AdminSidebar';
+import { EducationalSidebar } from './EducationalSidebar';
 import { AppHeader } from './AppHeader';
 
 // Admin Views
@@ -41,7 +41,11 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
     if (pathname.includes('/dashboard/admin/analytics')) return 'Analytics';
     if (pathname.includes('/dashboard/admin/calendar')) return 'Calendario';
     if (pathname.includes('/dashboard/admin/settings')) return 'Configuración';
-    return 'Dashboard Administrativo';
+    if (pathname.includes('/dashboard/lessons')) return 'Lecciones';
+    if (pathname.includes('/dashboard/assessments')) return 'Evaluaciones';
+    if (pathname.includes('/dashboard/students')) return 'Estudiantes';
+    if (pathname.includes('/dashboard/progress')) return 'Progreso';
+    return 'Dashboard Educativo';
   };
 
   const renderContent = () => {
@@ -97,6 +101,46 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
         </div>
       );
     }
+    if (pathname.includes('/dashboard/lessons')) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Lecciones</h2>
+            <p className="text-gray-600">Sistema de lecciones en desarrollo.</p>
+          </div>
+        </div>
+      );
+    }
+    if (pathname.includes('/dashboard/assessments')) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Evaluaciones</h2>
+            <p className="text-gray-600">Sistema de evaluaciones en desarrollo.</p>
+          </div>
+        </div>
+      );
+    }
+    if (pathname.includes('/dashboard/students')) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Estudiantes</h2>
+            <p className="text-gray-600">Gestión de estudiantes en desarrollo.</p>
+          </div>
+        </div>
+      );
+    }
+    if (pathname.includes('/dashboard/progress')) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Progreso</h2>
+            <p className="text-gray-600">Seguimiento de progreso en desarrollo.</p>
+          </div>
+        </div>
+      );
+    }
     
     // Default dashboard view
     return <AdminDashboardView user={user} onNavigateToSection={() => {}} onLogout={onLogout} />;
@@ -104,8 +148,8 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
 
   return (
     <div className="h-screen bg-black flex overflow-hidden">
-      {/* Admin Sidebar */}
-      <AdminSidebar userRole={user.role} />
+      {/* Educational Sidebar */}
+      <EducationalSidebar userRole={user.role} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
