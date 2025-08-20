@@ -19,7 +19,7 @@ interface PaymentNotesModalProps {
   studentName: string;
   currentStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
   newStatus: 'PENDING' | 'COMPLETED' | 'FAILED';
-  currentNotes?: string;
+  currentNotes?: string | undefined;
 }
 
 export function PaymentNotesModal({ 
@@ -74,7 +74,7 @@ export function PaymentNotesModal({
     }
   };
 
-  const isRequired = newStatus === 'failed';
+  const isRequired = newStatus === 'FAILED';
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

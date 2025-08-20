@@ -9,7 +9,8 @@ import {
   BarChart3, 
   Shield, 
   TrendingUp,
-  DollarSign
+  DollarSign,
+  Clock
 } from 'lucide-react';
 import { Button } from '../../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
@@ -196,7 +197,7 @@ export function AdminDashboardView({ user, onNavigateToSection }: AdminDashboard
           <Card className="bg-gray-900 border-gray-700">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <Calendar className="mr-2 h-4 w-4 text-blue-400" />
+                <Clock className="mr-2 h-4 w-4 text-blue-400" />
                 Próximas Clases
               </CardTitle>
             </CardHeader>

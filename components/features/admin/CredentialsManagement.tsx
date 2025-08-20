@@ -200,7 +200,7 @@ export function CredentialsManagement({ }: CredentialsManagementProps) {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="space-y-4"
         >
-          {filteredStudents.map((student, index) => (
+          {filteredStudents.map((student) => (
             <Card key={student.id} className="bg-gray-900 border-gray-700">
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

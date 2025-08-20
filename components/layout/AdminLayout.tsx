@@ -87,9 +87,6 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
         {/* Header */}
         <AppHeader
           title={getPageTitle()}
-          onLogout={onLogout}
-          showUserDropdown={showUserDropdown}
-          onToggleUserDropdown={() => setShowUserDropdown(!showUserDropdown)}
           showUserProfile={true}
         />
 

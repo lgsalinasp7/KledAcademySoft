@@ -200,7 +200,7 @@ export const useMainStore = create<MainStoreState>()(
           const authStore = useAuthStore.getState();
           const dataStore = useDataStore.getState();
           const progressStore = useProgressStore.getState();
-          const uiStore = useUIStore.getState();
+          // const uiStore = useUIStore.getState();
           
           return authStore.isLoading || 
                  dataStore.loading || 
